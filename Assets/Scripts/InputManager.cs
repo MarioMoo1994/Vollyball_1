@@ -1,47 +1,43 @@
 using System;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
 	[SerializeField] InputActionAsset inputActions;
 
-	[Header("Player 1 Input")]
-	[SerializeField] UnityEvent<Vector2> MovePlayer1;
-	[SerializeField] UnityEvent JumpPlayer1;
-
-	[Header("Player 2 Input")]
-	[SerializeField] UnityEvent<Vector2> MovePlayer2;
-	[SerializeField] UnityEvent JumpPlayer2;
+	[SerializeField] PlayerMovement player1;
+	[SerializeField] PlayerMovement player2;
 
 	int? gamepad1ID;
 	int? gamepad2ID;
 
 	void OnEnable()
 	{
-		var inputActionMap = inputActions.FindActionMap("ActionMap");
+		var inputActionMap = inputActions.FindActionMap("ActionMap", true);
+		inputActionMap.Enable();
 
-		BindInput(inputActionMap.FindAction("Move_Player1"), Input_Move_Player1);
-		BindInput(inputActionMap.FindAction("Move_Player2"), Input_Move_Player2);
-		BindInput(inputActionMap.FindAction("Move_Gamepad"), Input_Move_Gamepad);
+		BindInput(inputActionMap.FindAction("Move_Player1", true), Input_Move_Player1);
+		BindInput(inputActionMap.FindAction("Move_Player2", true), Input_Move_Player2);
+		BindInput(inputActionMap.FindAction("Move_Gamepad", true), Input_Move_Gamepad);
 
-		BindInput(inputActionMap.FindAction("Jump_Player1"), Input_Jump_Player1);
-		BindInput(inputActionMap.FindAction("Jump_Player2"), Input_Jump_Player2);
-		BindInput(inputActionMap.FindAction("Jump_Gamepad"), Input_Jump_Gamepad);
+		BindInput(inputActionMap.FindAction("Jump_Player1", true), Input_Jump_Player1);
+		BindInput(inputActionMap.FindAction("Jump_Player2", true), Input_Jump_Player2);
+		BindInput(inputActionMap.FindAction("Jump_Gamepad", true), Input_Jump_Gamepad);
 	}
 
 	void OnDisable()
 	{
-		var inputActionMap = inputActions.FindActionMap("ActionMap");
+		var inputActionMap = inputActions.FindActionMap("ActionMap", true);
+		inputActionMap.Disable();
 
-		UnbindInput(inputActionMap.FindAction("Move_Player1"), Input_Move_Player1);
-		UnbindInput(inputActionMap.FindAction("Move_Player2"), Input_Move_Player2);
-		UnbindInput(inputActionMap.FindAction("Move_Gamepad"), Input_Move_Gamepad);
+		UnbindInput(inputActionMap.FindAction("Move_Player1", true), Input_Move_Player1);
+		UnbindInput(inputActionMap.FindAction("Move_Player2", true), Input_Move_Player2);
+		UnbindInput(inputActionMap.FindAction("Move_Gamepad", true), Input_Move_Gamepad);
 
-		UnbindInput(inputActionMap.FindAction("Jump_Player1"), Input_Jump_Player1);
-		UnbindInput(inputActionMap.FindAction("Jump_Player2"), Input_Jump_Player2);
-		UnbindInput(inputActionMap.FindAction("Jump_Gamepad"), Input_Jump_Gamepad);
+		UnbindInput(inputActionMap.FindAction("Jump_Player1", true), Input_Jump_Player1);
+		UnbindInput(inputActionMap.FindAction("Jump_Player2", true), Input_Jump_Player2);
+		UnbindInput(inputActionMap.FindAction("Jump_Gamepad", true), Input_Jump_Gamepad);
 	}
 
 	int GetPlayerNumberFromGamepadInput(int deviceId)
@@ -71,13 +67,13 @@ public class InputManager : MonoBehaviour
 	void Input_Move_Player1(InputAction.CallbackContext ctx)
 	{
 		var value = ctx.ReadValue<Vector2>();
-		MovePlayer1.Invoke(value);
+		player1.Input_Move(value);
 	}
 
 	void Input_Move_Player2(InputAction.CallbackContext ctx)
 	{
 		var value = ctx.ReadValue<Vector2>();
-		MovePlayer2.Invoke(value);
+		player2.Input_Move(value);
 	}
 
 	void Input_Move_Gamepad(InputAction.CallbackContext ctx)
@@ -87,28 +83,30 @@ public class InputManager : MonoBehaviour
 		if (ctx.control.device is not Gamepad gamepad) return;
 		var playerNumber = GetPlayerNumberFromGamepadInput(gamepad.deviceId);
 
-		if (playerNumber == 1) MovePlayer1.Invoke(value);
-		else if (playerNumber == 2) MovePlayer2.Invoke(value);
+		if (playerNumber == 1) player1.Input_Move(value);
+		else if (playerNumber == 2) player2.Input_Move(value);
 	}
 
 	void Input_Jump_Player1(InputAction.CallbackContext ctx)
 	{
-		if (!ctx.performed) return;
-		JumpPlayer1.Invoke();
+		var value = ctx.phase == InputActionPhase.Performed;
+		player1.Input_Jump(value);
 	}
 
 	void Input_Jump_Player2(InputAction.CallbackContext ctx)
 	{
-		if (!ctx.performed) return;
-		JumpPlayer2.Invoke();
+		var value = ctx.phase == InputActionPhase.Performed;
+		player2.Input_Jump(value);
 	}
 
 	void Input_Jump_Gamepad(InputAction.CallbackContext ctx)
 	{
+		var value = ctx.phase == InputActionPhase.Performed;
+
 		if (ctx.control.device is not Gamepad gamepad) return;
 		var playerNumber = GetPlayerNumberFromGamepadInput(gamepad.deviceId);
 
-		if (playerNumber == 1) JumpPlayer1.Invoke();
-		else if (playerNumber == 2) JumpPlayer2.Invoke();
+		if (playerNumber == 1) player1.Input_Jump(value);
+		else if (playerNumber == 2) player2.Input_Jump(value);
 	}
 }

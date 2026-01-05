@@ -413,12 +413,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   inputActions: {fileID: -944628639613478452, guid: 55b9f66192bfba84eae260fdf39c5576, type: 3}
-  MovePlayer1:
-    m_PersistentCalls:
-      m_Calls: []
-  MovePlayer2:
-    m_PersistentCalls:
-      m_Calls: []
+  player1: {fileID: 568406491}
+  player2: {fileID: 1427653040}
 --- !u!4 &471961936
 Transform:
   m_ObjectHideFlags: 0
@@ -557,10 +553,10 @@ GameObject:
   - component: {fileID: 568406489}
   - component: {fileID: 568406488}
   - component: {fileID: 568406487}
-  - component: {fileID: 568406486}
   - component: {fileID: 568406485}
+  - component: {fileID: 568406491}
   m_Layer: 0
-  m_Name: Cube (3)
+  m_Name: Player 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -593,24 +589,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &568406486
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 568406484}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9523f0df56ef92c408275b8e8438db0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  moveSpeed: 6
-  jumpForce: 7
-  groundCheckDistance: 2
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!65 &568406487
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -703,6 +681,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &568406491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 568406484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 756bf76689f2c0a4b8c65ffd769c01dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  moveSpeed: 6
+  jumpForce: 7
+  groundCheckDistance: 2
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -989,7 +985,7 @@ GameObject:
   - component: {fileID: 1427653035}
   - component: {fileID: 1427653040}
   m_Layer: 0
-  m_Name: Cube (5)
+  m_Name: Player 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1123,15 +1119,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1427653033}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1dfa4baec5437b44199200de8b6907a2, type: 3}
+  m_Script: {fileID: 11500000, guid: 756bf76689f2c0a4b8c65ffd769c01dd, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: '::'
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   moveSpeed: 6
   jumpForce: 7
   groundCheckDistance: 2
   groundLayer:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1
 --- !u!1 &1568860177
 GameObject:
   m_ObjectHideFlags: 0
