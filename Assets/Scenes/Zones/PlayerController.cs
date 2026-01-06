@@ -1,16 +1,9 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-	enum Side
-	{
-		Left, 
-		Right
-	}
-
 	[SerializeField] InputActionAsset inputActions;
 	[SerializeField] Transform aimTarget;
 	[SerializeField] Side side;
@@ -18,7 +11,6 @@ public class PlayerController : MonoBehaviour
 	List<Transform> leftZones;
 	List<Transform> rightZones;
 	
-	const int numberOfZones = 5;
 	int currentZone;
 	bool aiming;
 	int targetZoneOffset;
@@ -35,19 +27,7 @@ public class PlayerController : MonoBehaviour
 
 	void Start()
 	{
-		// Find zone objects
-		leftZones = new List<Transform>();
-		rightZones = new List<Transform>();
-		for (int i = 0; i < numberOfZones; i++)
-		{
-			var leftZoneName = $"Zone L{i}";
-			var leftTransform = FindTransformByName(leftZoneName);
-			leftZones.Add(leftTransform);
-
-			var rightZoneName = $"Zone R{i}";
-			var rightTransform = FindTransformByName(rightZoneName);
-			rightZones.Add(rightTransform);
-		}
+		ZoneUtil.GetZones(out leftZones, out rightZones);
 
 		// Start at center zone
 		MoveToZone(2);
@@ -56,13 +36,11 @@ public class PlayerController : MonoBehaviour
 	// Move this player to the given zone index
 	void MoveToZone(int zone)
 	{
-		var zoneTransforms = side == Side.Left ? leftZones : rightZones;
-
-		currentZone = Mathf.Clamp(zone, 0, numberOfZones - 1);
-		var currentPosition = zoneTransforms[currentZone].position;
+		currentZone = Mathf.Clamp(zone, 0, ZoneUtil.NumberOfZones - 1);
+		var zoneTransform = ZoneUtil.GetZoneTransform(side, currentZone);
 
 		transform.position = new Vector3(
-			currentPosition.x,
+            zoneTransform.position.x,
 			transform.position.y,
 			transform.position.z
 		);
@@ -73,7 +51,7 @@ public class PlayerController : MonoBehaviour
 	{
 		// Inverse
 		var zoneTransforms = side == Side.Left ? rightZones : leftZones;
-		var clampedZoneIndex = Mathf.Clamp(zone, 0, numberOfZones - 1);
+		var clampedZoneIndex = Mathf.Clamp(zone, 0, ZoneUtil.NumberOfZones - 1);
 		var targetZone = zoneTransforms[clampedZoneIndex];
 
 		aimTarget.position = new Vector3(
@@ -136,7 +114,7 @@ public class PlayerController : MonoBehaviour
 		// Visual
 		float yScale = aiming ? 0.75f : 1f;
 		transform.localScale = new Vector3(1, yScale, 1);
-    }
+	}
 
 	void BindInput()
 	{
@@ -168,11 +146,5 @@ public class PlayerController : MonoBehaviour
 		var aim = actionMap.FindAction("Aim");
 		aim.started -= Input_Aim;
 		aim.canceled -= Input_Aim;
-	}
-
-	static Transform FindTransformByName(string name)
-	{
-		return FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None)
-			.First(x => x.name == name);
 	}
 }
