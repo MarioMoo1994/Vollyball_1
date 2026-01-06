@@ -44,16 +44,16 @@ public class GameManager : MonoBehaviour
 					ball.MoveDirection = Direction.Down;
 
 					var zoneTransform = ZoneUtil.GetZoneTransform(ball.Side, ball.ZoneAfterSwitch);
-
 					ball.Transform.position = new Vector3(zoneTransform.position.x, ceilingY, 0);
+
+					ball.Zone = ball.ZoneAfterSwitch;
 				}
 			}
 			else
 			{
 				// Player hit
 				var relevantPlayer = ball.Side == player1.Side ? player1 : player2;
-				if (ball.Side == relevantPlayer.Side
-					&& ball.Zone == relevantPlayer.CurrentZone
+				if (ball.Zone == relevantPlayer.CurrentZone
 					&& ball.Transform.position.y < playerHitY)
 				{
 					ball.MoveDirection = Direction.Up;
