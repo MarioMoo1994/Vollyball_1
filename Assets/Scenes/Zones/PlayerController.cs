@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour
 
 	GameManager gameManager;
 
+	bool serveAllowed = false;
+
 	void OnEnable()
 	{
 		BindInput();
@@ -120,6 +122,7 @@ public class PlayerController : MonoBehaviour
 
 			if (gameManager.PlayerServeRelease(this, TargetZone))
 			{
+				serveAllowed = false;
 				// Disable visuals
 				serveBall.SetActive(false);
 			}
@@ -136,6 +139,7 @@ public class PlayerController : MonoBehaviour
 
 	public void OnAllowServe()
 	{
+		serveAllowed = true;
 		serveBall.SetActive(true);
 	}
 

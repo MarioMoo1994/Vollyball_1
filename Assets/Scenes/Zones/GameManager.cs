@@ -155,6 +155,7 @@ public class GameManager : MonoBehaviour
 	public bool PlayerServeStart(PlayerController player)
 	{
 		if (serveCompleted || serveStarted) return false;
+		if (player.Side != servingSide) return false;
 
 		serveStarted = true;
 
@@ -164,6 +165,7 @@ public class GameManager : MonoBehaviour
 	public bool PlayerServeRelease(PlayerController player, int targetZone)
 	{
 		if (serveCompleted) return false;
+		if (player.Side != servingSide) return false;
 
 		serveCompleted = true;
 		SpawnBallPlayer(player.Side, targetZone);
