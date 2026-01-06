@@ -1,0 +1,75 @@
+{
+    "version": 1,
+    "name": "Zones_Player2_InputActions",
+    "maps": [
+        {
+            "name": "ActionMap",
+            "id": "84f4242d-66d4-492e-b3ac-30f0c6bc5c0a",
+            "actions": [
+                {
+                    "name": "MoveCloser",
+                    "type": "Button",
+                    "id": "d9876cb7-822d-4a18-b47c-0986eb9f7dcc",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MoveAway",
+                    "type": "Button",
+                    "id": "f57d1495-550a-44ce-823e-24a9ea98db26",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Aim",
+                    "type": "Button",
+                    "id": "f4132c5a-bf13-4cb1-8723-ac4f7f6bd84d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "4daaab4f-89a7-4b92-b39c-385aa6bd9f78",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveCloser",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7035c1ca-5294-48e9-aad5-54c4039be6ac",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveAway",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5a736a4b-9f3f-4bda-9a11-9446b17f7cc2",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Aim",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
