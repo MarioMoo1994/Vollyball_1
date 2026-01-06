@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Ball
 {
@@ -23,15 +23,36 @@ public class GameManager : MonoBehaviour
 
 	[SerializeField] GameObject ballPrefab;
 
+	[Header("Events")]
+	[SerializeField] UnityEvent Player1_Point;
+	[SerializeField] UnityEvent Player2_Point;
+
 	readonly List<Ball> balls = new();
+
+	float leftSpeedModifier = 1f;
+	float rightSpeedModifier = 1f;
+
+	Side servingSide;
+	bool serveStarted = false;
+	bool serveCompleted = false;
+
+	public void SetSpeedModifier(Side side, float modifier)
+	{
+		if (side == Side.Left) leftSpeedModifier = modifier;
+		else if (side == Side.Right) rightSpeedModifier = modifier;
+	}
 
 	void Start()
 	{
-		SpawnBallCeiling(Side.Left, 2);
+		servingSide = Side.Left;
+		var player = servingSide == Side.Left ? player1 : player2;
+		player.OnAllowServe();
 	}
 
 	void Update()
 	{
+		var ballsToDestroy = new List<Ball>();
+
 		foreach (var ball in balls)
 		{
 			// Update state
@@ -62,13 +83,34 @@ public class GameManager : MonoBehaviour
 				// Floor hit
 				else if (ball.Transform.position.y < floorHitY)
 				{
-					ball.MoveDirection = Direction.Up;
+					if (ball.Side == Side.Right) Player1_Point.Invoke();
+					else Player2_Point.Invoke();
+
+					// Reset
+					ballsToDestroy.Add(ball);
+
+					serveStarted = false;
+					serveCompleted = false;
+					servingSide = ball.Side;
+
+					var player = servingSide == Side.Left ? player1 : player2;
+					player.OnAllowServe();
 				}
 			}
 
 			// Move
 			var directionModifier = ball.MoveDirection == Direction.Up ? 1f : -1f;
-			ball.Transform.position += directionModifier * ballMoveSpeed * Time.deltaTime * Vector3.up;
+			var speedModifier = ball.Side == Side.Left ? leftSpeedModifier : rightSpeedModifier;
+			var speed = ballMoveSpeed * speedModifier * directionModifier;
+
+			ball.Transform.position += speed * Time.deltaTime * Vector3.up;
+		}
+
+		// Destroy
+		foreach (var ballToDestroy in ballsToDestroy)
+		{
+			balls.Remove(ballToDestroy);
+			Destroy(ballToDestroy.Transform.gameObject);
 		}
 	}
 
@@ -89,5 +131,43 @@ public class GameManager : MonoBehaviour
 			MoveDirection = Direction.Down
 		};
 		balls.Add(ball);
+	}
+
+	public void SpawnBallPlayer(Side side, int targetZone)
+	{
+		var player = side == Side.Left ? player1 : player2;
+		var zoneTransform = ZoneUtil.GetZoneTransform(side, player.CurrentZone);
+
+		var obj = Instantiate(ballPrefab);
+		obj.transform.position = new Vector3(zoneTransform.position.x, playerHitY, 0);
+
+		var ball = new Ball()
+		{
+			Transform = obj.transform,
+			Zone = player.CurrentZone,
+			ZoneAfterSwitch = targetZone,
+			Side = side,
+			MoveDirection = Direction.Up
+		};
+		balls.Add(ball);
+	}
+
+	public bool PlayerServeStart(PlayerController player)
+	{
+		if (serveCompleted || serveStarted) return false;
+
+		serveStarted = true;
+
+		return true;
+	}
+
+	public bool PlayerServeRelease(PlayerController player, int targetZone)
+	{
+		if (serveCompleted) return false;
+
+		serveCompleted = true;
+		SpawnBallPlayer(player.Side, targetZone);
+
+		return true;
 	}
 }

@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] InputActionAsset inputActions;
 	[SerializeField] Transform aimTarget;
 	[SerializeField] Side side;
+	[SerializeField] GameObject serveBall;
 
 	public Side Side => side;
 
@@ -20,6 +21,8 @@ public class PlayerController : MonoBehaviour
 	bool aiming;
 	int targetZoneOffset;
 
+	GameManager gameManager;
+
 	void OnEnable()
 	{
 		BindInput();
@@ -32,6 +35,8 @@ public class PlayerController : MonoBehaviour
 
 	void Start()
 	{
+		gameManager = FindFirstObjectByType<GameManager>();
+
 		ZoneUtil.GetZones(out leftZones, out rightZones);
 
 		// Start at center zone
@@ -45,7 +50,7 @@ public class PlayerController : MonoBehaviour
 		var zoneTransform = ZoneUtil.GetZoneTransform(side, currentZone);
 
 		transform.position = new Vector3(
-            zoneTransform.position.x,
+			zoneTransform.position.x,
 			transform.position.y,
 			transform.position.z
 		);
@@ -103,22 +108,35 @@ public class PlayerController : MonoBehaviour
 
 	void Input_Aim(InputAction.CallbackContext ctx)
 	{
-		// Reset target position
-		targetZoneOffset = 0;
-		MoveTargetToZone(currentZone + targetZoneOffset);
-
 		if (ctx.started)
 		{
 			aiming = true;
+
+			gameManager.PlayerServeStart(this);
 		}
 		else if (ctx.canceled)
 		{
 			aiming = false;
+
+			if (gameManager.PlayerServeRelease(this, TargetZone))
+			{
+				// Disable visuals
+				serveBall.SetActive(false);
+			}
 		}
+
+		// Reset target position
+		targetZoneOffset = 0;
+		MoveTargetToZone(currentZone + targetZoneOffset);
 
 		// Visual
 		float yScale = aiming ? 0.75f : 1f;
 		transform.localScale = new Vector3(1, yScale, 1);
+	}
+
+	public void OnAllowServe()
+	{
+		serveBall.SetActive(true);
 	}
 
 	void BindInput()
