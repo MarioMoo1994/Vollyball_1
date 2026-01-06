@@ -20,7 +20,7 @@ public class ScoreScript : MonoBehaviour
     public GameObject p1WinText;
     public GameObject p2WinText;
     public GameObject Menu;
-    public int currentLevel;
+    private int currentLevel;
 
     public void Awake()
     {
@@ -34,6 +34,10 @@ public class ScoreScript : MonoBehaviour
         p1Score = 0;
         p2Score = 0;
         UpdateScoreDisplay();
+    }
+    public void Update()
+    {
+        WinCondition();
     }
 
     public void AddScoreP1()
@@ -70,6 +74,7 @@ public class ScoreScript : MonoBehaviour
             p2WinText.SetActive(true);
             p1WinText.SetActive(false);
         }
+        //update text to Marius' animations later
     }
 
     public void RestartGame()
