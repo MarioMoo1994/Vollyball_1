@@ -23,7 +23,6 @@ public class GameManager : MonoBehaviour
 	[SerializeField] GameObject ballPrefab;
 
 	readonly List<Ball> balls = new();
-	const int numberOfZones = 5;
 
 	void Start()
 	{
@@ -56,7 +55,7 @@ public class GameManager : MonoBehaviour
 					ball.MoveDirection = Direction.Up;
 
 					// Random zone after switch
-					ball.ZoneAfterSwitch = Random.Range(0, numberOfZones);
+					ball.ZoneAfterSwitch = Random.Range(0, ZoneUtil.NumberOfZones);
 				}
 			}
 
@@ -68,7 +67,7 @@ public class GameManager : MonoBehaviour
 
 	public void SpawnBallCeiling(Side side, int zone)
 	{
-		var clampedZoneIndex = Mathf.Clamp(zone, 0, numberOfZones - 1);
+		var clampedZoneIndex = Mathf.Clamp(zone, 0, ZoneUtil.NumberOfZones - 1);
 		var zoneTransform = ZoneUtil.GetZoneTransform(side, zone);
 
 		var obj = Instantiate(ballPrefab);
