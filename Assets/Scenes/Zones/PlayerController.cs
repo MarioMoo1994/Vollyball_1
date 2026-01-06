@@ -8,10 +8,15 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] Transform aimTarget;
 	[SerializeField] Side side;
 
+	public Side Side => side;
+
 	List<Transform> leftZones;
 	List<Transform> rightZones;
 	
 	int currentZone;
+	public int CurrentZone => currentZone;
+	public int TargetZone => Mathf.Clamp(currentZone + targetZoneOffset, 0, ZoneUtil.NumberOfZones);
+
 	bool aiming;
 	int targetZoneOffset;
 

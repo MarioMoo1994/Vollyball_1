@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Ball
@@ -49,13 +50,19 @@ public class GameManager : MonoBehaviour
 			}
 			else
 			{
-				// Switch direction?
-				if (ball.Transform.position.y < floorHitY)
+				// Player hit
+				var relevantPlayer = ball.Side == player1.Side ? player1 : player2;
+				if (ball.Side == relevantPlayer.Side
+					&& ball.Zone == relevantPlayer.CurrentZone
+					&& ball.Transform.position.y < playerHitY)
 				{
 					ball.MoveDirection = Direction.Up;
-
-					// Random zone after switch
-					ball.ZoneAfterSwitch = Random.Range(0, ZoneUtil.NumberOfZones);
+					ball.ZoneAfterSwitch = relevantPlayer.TargetZone;
+				}
+				// Floor hit
+				else if (ball.Transform.position.y < floorHitY)
+				{
+					ball.MoveDirection = Direction.Up;
 				}
 			}
 
