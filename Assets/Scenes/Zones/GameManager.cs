@@ -6,9 +6,9 @@ public class Ball
 {
 	public Transform Transform;
 	public int Zone;
-	public int ZoneAfterSwitch;
-	public Side Side;
-	public Direction MoveDirection;
+	public bool MovingUp;
+	public int CurrentSidePlayerNumber;
+	public int LastHitPlayerNumber;
 }
 
 public class GameManager : MonoBehaviour
@@ -23,29 +23,35 @@ public class GameManager : MonoBehaviour
 
 	[SerializeField] GameObject ballPrefab;
 
+	// Left to right
+	[Header("Zone Transforms (LEFT TO RIGHT!!!)")]
+	[SerializeField] Transform[] player1Zones;
+	[SerializeField] Transform[] player2Zones;
+
 	[Header("Events")]
 	[SerializeField] UnityEvent Player1_Point;
 	[SerializeField] UnityEvent Player2_Point;
 
 	readonly List<Ball> balls = new();
 
-	float leftSpeedModifier = 1f;
-	float rightSpeedModifier = 1f;
+	float player1SpeedModifier = 1f;
+	float player2SpeedModifier = 1f;
 
-	Side servingSide;
+	int servingPlayer;
 	bool serveStarted = false;
 	bool serveCompleted = false;
 
-	public void SetSpeedModifier(Side side, float modifier)
+	public void SetSpeedModifier(int playerNumber, float modifier)
 	{
-		if (side == Side.Left) leftSpeedModifier = modifier;
-		else if (side == Side.Right) rightSpeedModifier = modifier;
+		if (playerNumber == 1) player1SpeedModifier = modifier;
+		else if (playerNumber == 2) player2SpeedModifier = modifier;
 	}
 
 	void Start()
 	{
-		servingSide = Side.Left;
-		var player = servingSide == Side.Left ? player1 : player2;
+		servingPlayer = 1;
+
+		var player = servingPlayer == 1 ? player1 : player2;
 		player.OnAllowServe();
 	}
 
@@ -56,34 +62,39 @@ public class GameManager : MonoBehaviour
 		foreach (var ball in balls)
 		{
 			// Update state
-			if (ball.MoveDirection == Direction.Up)
+			if (ball.MovingUp)
 			{
 				// Switch sides if above ceiling
 				if (ball.Transform.position.y > ceilingY)
 				{
-					ball.Side = ball.Side == Side.Left ? Side.Right : Side.Left;
-					ball.MoveDirection = Direction.Down;
+					// Switch side and movement direction
+					ball.CurrentSidePlayerNumber = ball.CurrentSidePlayerNumber == 1 ? 2 : 1;
+					ball.MovingUp = false;
 
-					var zoneTransform = ZoneUtil.GetZoneTransform(ball.Side, ball.ZoneAfterSwitch);
+					// Set zone to current target of the player that last hit it
+					var relevantPlayer = ball.LastHitPlayerNumber == player1.PlayerNumber ? player1 : player2;
+					ball.Zone = relevantPlayer.CurrentTargetZone;
+
+					// Move gameobject to zone on other side
+					var zoneTransform = GetZoneTransform(ball.CurrentSidePlayerNumber, ball.Zone);
 					ball.Transform.position = new Vector3(zoneTransform.position.x, ceilingY, 0);
-
-					ball.Zone = ball.ZoneAfterSwitch;
 				}
 			}
 			else
 			{
+				var relevantPlayer = ball.CurrentSidePlayerNumber == player1.PlayerNumber ? player1 : player2;
+
 				// Player hit
-				var relevantPlayer = ball.Side == player1.Side ? player1 : player2;
-				if (ball.Zone == relevantPlayer.CurrentZone
+				if (ball.Zone == relevantPlayer.CurrentPlayerZone
 					&& ball.Transform.position.y < playerHitY)
 				{
-					ball.MoveDirection = Direction.Up;
-					ball.ZoneAfterSwitch = relevantPlayer.TargetZone;
+					ball.MovingUp = true;
+					ball.LastHitPlayerNumber = relevantPlayer.PlayerNumber;
 				}
 				// Floor hit
 				else if (ball.Transform.position.y < floorHitY)
 				{
-					if (ball.Side == Side.Right) Player1_Point.Invoke();
+					if (ball.CurrentSidePlayerNumber == 2) Player1_Point.Invoke();
 					else Player2_Point.Invoke();
 
 					// Reset
@@ -91,16 +102,16 @@ public class GameManager : MonoBehaviour
 
 					serveStarted = false;
 					serveCompleted = false;
-					servingSide = ball.Side;
+					servingPlayer = ball.CurrentSidePlayerNumber;
 
-					var player = servingSide == Side.Left ? player1 : player2;
+					var player = servingPlayer == 1 ? player1 : player2;
 					player.OnAllowServe();
 				}
 			}
 
 			// Move
-			var directionModifier = ball.MoveDirection == Direction.Up ? 1f : -1f;
-			var speedModifier = ball.Side == Side.Left ? leftSpeedModifier : rightSpeedModifier;
+			var directionModifier = ball.MovingUp ? 1f : -1f;
+			var speedModifier = ball.CurrentSidePlayerNumber == 1 ? player1SpeedModifier : player2SpeedModifier;
 			var speed = ballMoveSpeed * speedModifier * directionModifier;
 
 			ball.Transform.position += speed * Time.deltaTime * Vector3.up;
@@ -114,29 +125,22 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
-	public void SpawnBallCeiling(Side side, int zone)
+	public int ClampZoneIndex(int playerNumber, int zoneIndex)
 	{
-		var clampedZoneIndex = Mathf.Clamp(zone, 0, ZoneUtil.NumberOfZones - 1);
-		var zoneTransform = ZoneUtil.GetZoneTransform(side, zone);
-
-		var obj = Instantiate(ballPrefab);
-		obj.transform.position = new Vector3(zoneTransform.position.x, ceilingY, 0);
-
-		var ball = new Ball()
-		{
-			Transform = obj.transform,
-			Zone = clampedZoneIndex,
-			ZoneAfterSwitch = clampedZoneIndex,
-			Side = side,
-			MoveDirection = Direction.Down
-		};
-		balls.Add(ball);
+		var zoneTransforms = playerNumber == 1 ? player1Zones : player2Zones;
+		return Mathf.Clamp(zoneIndex, 0, zoneTransforms.Length - 1);
 	}
 
-	public void SpawnBallPlayer(Side side, int targetZone)
+	public Transform GetZoneTransform(int playerNumber, int zoneIndex)
 	{
-		var player = side == Side.Left ? player1 : player2;
-		var zoneTransform = ZoneUtil.GetZoneTransform(side, player.CurrentZone);
+		var zoneTransforms = playerNumber == 1 ? player1Zones : player2Zones;
+		return zoneTransforms[ClampZoneIndex(playerNumber, zoneIndex)];
+	}
+
+	public void SpawnBallPlayer(int playerNumber)
+	{
+		var player = playerNumber == 1 ? player1 : player2;
+		var zoneTransform = GetZoneTransform(playerNumber, player.CurrentPlayerZone);
 
 		var obj = Instantiate(ballPrefab);
 		obj.transform.position = new Vector3(zoneTransform.position.x, playerHitY, 0);
@@ -144,10 +148,10 @@ public class GameManager : MonoBehaviour
 		var ball = new Ball()
 		{
 			Transform = obj.transform,
-			Zone = player.CurrentZone,
-			ZoneAfterSwitch = targetZone,
-			Side = side,
-			MoveDirection = Direction.Up
+			Zone = player.CurrentPlayerZone,
+			CurrentSidePlayerNumber = playerNumber,
+			LastHitPlayerNumber = playerNumber,
+			MovingUp = true
 		};
 		balls.Add(ball);
 	}
@@ -155,20 +159,20 @@ public class GameManager : MonoBehaviour
 	public bool PlayerServeStart(PlayerController player)
 	{
 		if (serveCompleted || serveStarted) return false;
-		if (player.Side != servingSide) return false;
+		if (player.PlayerNumber != servingPlayer) return false;
 
 		serveStarted = true;
 
 		return true;
 	}
 
-	public bool PlayerServeRelease(PlayerController player, int targetZone)
+	public bool PlayerServeRelease(PlayerController player)
 	{
 		if (serveCompleted) return false;
-		if (player.Side != servingSide) return false;
+		if (player.PlayerNumber != servingPlayer) return false;
 
 		serveCompleted = true;
-		SpawnBallPlayer(player.Side, targetZone);
+		SpawnBallPlayer(player.PlayerNumber);
 
 		return true;
 	}

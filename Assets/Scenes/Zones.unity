@@ -144,7 +144,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 253748676}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -745,7 +745,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 550070324}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -860,6 +860,18 @@ MonoBehaviour:
   player1: {fileID: 1678271529}
   player2: {fileID: 2009945261}
   ballPrefab: {fileID: 8947945365994176029, guid: 730e28aaa95f04e458f35cf3c9d42d1b, type: 3}
+  player1Zones:
+  - {fileID: 1831072984}
+  - {fileID: 1151762862}
+  - {fileID: 833176822}
+  - {fileID: 1276409409}
+  - {fileID: 550070328}
+  player2Zones:
+  - {fileID: 253748679}
+  - {fileID: 1530675967}
+  - {fileID: 1436374068}
+  - {fileID: 1651436201}
+  - {fileID: 791640839}
   Player1_Point:
     m_PersistentCalls:
       m_Calls:
@@ -1238,7 +1250,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 791640836}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1376,7 +1388,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 833176818}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1465,7 +1477,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1151762859}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1800,7 +1812,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1276409405}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1950,13 +1962,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputController
   inputActions_player1: {fileID: -944628639613478452, guid: b4e6f757d616db94ba4de7314ee7a4de, type: 3}
-  inputActions_player2: {fileID: -944628639613478452, guid: d7785f4e906b74846ac7ee2dd3d22d1f, type: 3}
-  player1_moveCloser:
+  inputActions_player2: {fileID: -944628639613478452, guid: e0dabcaf60c35a34aa9be7ba119631a1, type: 3}
+  player1_movePlayerLeft:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1678271529}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: Input_MoveCloser
+        m_MethodName: Input_MovePlayerLeft
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1966,12 +1978,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  player1_moveAway:
+  player1_movePlayerRight:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1678271529}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: Input_MoveAway
+        m_MethodName: Input_MovePlayerRight
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1981,12 +1993,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  player1_aim:
+  player1_moveTargetLeft:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1678271529}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: Input_Aim
+        m_MethodName: Input_MoveTargetLeft
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1996,12 +2008,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  player2_moveCloser:
+  player1_moveTargetRight:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2009945261}
+      - m_Target: {fileID: 1678271529}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: Input_MoveCloser
+        m_MethodName: Input_MoveTargetRight
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2011,12 +2023,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  player2_moveAway:
+  player1_serve:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2009945261}
+      - m_Target: {fileID: 1678271529}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: Input_MoveAway
+        m_MethodName: Input_Serve
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2026,12 +2038,72 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  player2_aim:
+  player2_movePlayerLeft:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2009945261}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: Input_Aim
+        m_MethodName: Input_MovePlayerLeft
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  player2_movePlayerRight:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2009945261}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: Input_MovePlayerRight
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  player2_moveTargetLeft:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2009945261}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: Input_MoveTargetLeft
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  player2_moveTargetRight:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2009945261}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: Input_MoveTargetRight
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  player2_serve:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2009945261}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: Input_Serve
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2066,7 +2138,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1436374065}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -2381,7 +2453,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1530675964}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -2559,7 +2631,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1651436198}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -2708,8 +2780,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   aimTarget: {fileID: 1573091097}
-  side: 0
   serveBall: {fileID: 2101435546}
+  playerNumber: 1
 --- !u!1 &1831072981
 GameObject:
   m_ObjectHideFlags: 0
@@ -2735,7 +2807,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1831072981}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -2941,8 +3013,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   aimTarget: {fileID: 665149668}
-  side: 1
   serveBall: {fileID: 1441774235}
+  playerNumber: 2
 --- !u!70 &2009945262
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

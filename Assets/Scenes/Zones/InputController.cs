@@ -10,14 +10,18 @@ public class InputController : MonoBehaviour
 	[SerializeField] InputActionAsset inputActions_player2;
 
 	[Header("Player1")]
-	[SerializeField] UnityEvent<InputAction.CallbackContext> player1_moveCloser;
-	[SerializeField] UnityEvent<InputAction.CallbackContext> player1_moveAway;
-	[SerializeField] UnityEvent<InputAction.CallbackContext> player1_aim;
+	[SerializeField] UnityEvent<InputAction.CallbackContext> player1_movePlayerLeft;
+	[SerializeField] UnityEvent<InputAction.CallbackContext> player1_movePlayerRight;
+	[SerializeField] UnityEvent<InputAction.CallbackContext> player1_moveTargetLeft;
+	[SerializeField] UnityEvent<InputAction.CallbackContext> player1_moveTargetRight;
+	[SerializeField] UnityEvent<InputAction.CallbackContext> player1_serve;
 
 	[Header("Player2")]
-	[SerializeField] UnityEvent<InputAction.CallbackContext> player2_moveCloser;
-	[SerializeField] UnityEvent<InputAction.CallbackContext> player2_moveAway;
-	[SerializeField] UnityEvent<InputAction.CallbackContext> player2_aim;
+	[SerializeField] UnityEvent<InputAction.CallbackContext> player2_movePlayerLeft;
+	[SerializeField] UnityEvent<InputAction.CallbackContext> player2_movePlayerRight;
+	[SerializeField] UnityEvent<InputAction.CallbackContext> player2_moveTargetLeft;
+	[SerializeField] UnityEvent<InputAction.CallbackContext> player2_moveTargetRight;
+	[SerializeField] UnityEvent<InputAction.CallbackContext> player2_serve;
 
 	readonly List<int> gamepad1Ids = new();
 	readonly List<int> gamepad2Ids = new();
@@ -27,16 +31,20 @@ public class InputController : MonoBehaviour
 		var inputActionMap_player1 = inputActions_player1.FindActionMap("ActionMap", true);
 		inputActionMap_player1.Enable();
 
-		BindInput(inputActionMap_player1.FindAction("MoveCloser", true), Input_MoveCloser_Player1);
-		BindInput(inputActionMap_player1.FindAction("MoveAway", true), Input_MoveAway_Player1);
-		BindInput(inputActionMap_player1.FindAction("Aim", true), Input_Aim_Player1);
+		BindInput(inputActionMap_player1.FindAction("MovePlayerLeft", true), Input_MovePlayerLeft_Player1);
+		BindInput(inputActionMap_player1.FindAction("MovePlayerRight", true), Input_MovePlayerRight_Player1);
+		BindInput(inputActionMap_player1.FindAction("MoveTargetLeft", true), Input_MoveTargetLeft_Player1);
+		BindInput(inputActionMap_player1.FindAction("MoveTargetRight", true), Input_MoveTargetRight_Player1);
+		BindInput(inputActionMap_player1.FindAction("Serve", true), Input_Serve_Player1);
 
 		var inputActionMap_player2 = inputActions_player2.FindActionMap("ActionMap", true);
 		inputActionMap_player2.Enable();
 
-		BindInput(inputActionMap_player2.FindAction("MoveCloser", true), Input_MoveCloser_Player2);
-		BindInput(inputActionMap_player2.FindAction("MoveAway", true), Input_MoveAway_Player2);
-		BindInput(inputActionMap_player2.FindAction("Aim", true), Input_Aim_Player2);
+		BindInput(inputActionMap_player2.FindAction("MovePlayerLeft", true), Input_MovePlayerLeft_Player2);
+		BindInput(inputActionMap_player2.FindAction("MovePlayerRight", true), Input_MovePlayerRight_Player2);
+		BindInput(inputActionMap_player2.FindAction("MoveTargetLeft", true), Input_MoveTargetLeft_Player2);
+		BindInput(inputActionMap_player2.FindAction("MoveTargetRight", true), Input_MoveTargetRight_Player2);
+		BindInput(inputActionMap_player2.FindAction("Serve", true), Input_Serve_Player2);
 	}
 
 	void OnDisable()
@@ -44,16 +52,20 @@ public class InputController : MonoBehaviour
 		var inputActionMap_player1 = inputActions_player1.FindActionMap("ActionMap", true);
 		inputActionMap_player1.Enable();
 
-		UnbindInput(inputActionMap_player1.FindAction("MoveCloser", true), Input_MoveCloser_Player1);
-		UnbindInput(inputActionMap_player1.FindAction("MoveAway", true), Input_MoveAway_Player1);
-		UnbindInput(inputActionMap_player1.FindAction("Aim", true), Input_Aim_Player1);
+		UnbindInput(inputActionMap_player1.FindAction("MovePlayerLeft", true), Input_MovePlayerLeft_Player1);
+		UnbindInput(inputActionMap_player1.FindAction("MovePlayerRight", true), Input_MovePlayerRight_Player1);
+		UnbindInput(inputActionMap_player1.FindAction("MoveTargetLeft", true), Input_MoveTargetLeft_Player1);
+		UnbindInput(inputActionMap_player1.FindAction("MoveTargetRight", true), Input_MoveTargetRight_Player1);
+		UnbindInput(inputActionMap_player1.FindAction("Serve", true), Input_Serve_Player1);
 
 		var inputActionMap_player2 = inputActions_player2.FindActionMap("ActionMap", true);
 		inputActionMap_player2.Enable();
 
-		UnbindInput(inputActionMap_player2.FindAction("MoveCloser", true), Input_MoveCloser_Player2);
-		UnbindInput(inputActionMap_player2.FindAction("MoveAway", true), Input_MoveAway_Player2);
-		UnbindInput(inputActionMap_player2.FindAction("Aim", true), Input_Aim_Player2);
+		UnbindInput(inputActionMap_player2.FindAction("MovePlayerLeft", true), Input_MovePlayerLeft_Player2);
+		UnbindInput(inputActionMap_player2.FindAction("MovePlayerRight", true), Input_MovePlayerRight_Player2);
+		UnbindInput(inputActionMap_player2.FindAction("MoveTargetLeft", true), Input_MoveTargetLeft_Player2);
+		UnbindInput(inputActionMap_player2.FindAction("MoveTargetRight", true), Input_MoveTargetRight_Player2);
+		UnbindInput(inputActionMap_player2.FindAction("Serve", true), Input_Serve_Player2);
 	}
 
 	int GetPlayerNumberFromDeviceId(int deviceId)
@@ -64,6 +76,7 @@ public class InputController : MonoBehaviour
 
 		// Bind to player with fewest devices bound to them
 		// Return player number device was bound to
+		// Map to player 1 first
 		if (gamepad1Ids.Count <= gamepad2Ids.Count)
 		{
 			gamepad1Ids.Add(deviceId);
@@ -74,6 +87,18 @@ public class InputController : MonoBehaviour
 			gamepad2Ids.Add(deviceId);
 			return 2;
 		}
+	}
+
+	bool InputAllowedForPlayer(InputAction.CallbackContext ctx, int playerNumber)
+	{
+		// If gamepad is not mapped to this player, dont allow
+		if (ctx.control.device is Gamepad gamepad)
+		{
+			var deviceMappedPlayerNumber = GetPlayerNumberFromDeviceId(gamepad.deviceId);
+			if (deviceMappedPlayerNumber != playerNumber) return false;
+		}
+		
+		return true;
 	}
 
 	static void BindInput(InputAction action, Action<InputAction.CallbackContext> callback)
@@ -90,76 +115,81 @@ public class InputController : MonoBehaviour
 		action.canceled -= callback;
 	}
 
-	void Input_MoveCloser_Player1(InputAction.CallbackContext ctx)
-	{
-		// If gamepad is not mapped to this player, ignore
-		if (ctx.control.device is Gamepad gamepad)
-		{
-			var playerNumber = GetPlayerNumberFromDeviceId(gamepad.deviceId);
-			if (playerNumber != 1) return;
-		}
+	// Player 1
 
-		player1_moveCloser.Invoke(ctx);
+	void Input_MovePlayerLeft_Player1(InputAction.CallbackContext ctx)
+	{
+		if (!InputAllowedForPlayer(ctx, 1)) return;
+
+		player1_movePlayerLeft.Invoke(ctx);
 	}
 
-	void Input_MoveCloser_Player2(InputAction.CallbackContext ctx)
+	void Input_MovePlayerRight_Player1(InputAction.CallbackContext ctx)
 	{
-		// If gamepad is not mapped to this player, ignore
-		if (ctx.control.device is Gamepad gamepad)
-		{
-			var playerNumber = GetPlayerNumberFromDeviceId(gamepad.deviceId);
-			if (playerNumber != 2) return;
-		}
 
-		player2_moveCloser.Invoke(ctx);
+		if (!InputAllowedForPlayer(ctx, 1)) return;
+
+		player1_movePlayerRight.Invoke(ctx);
 	}
 
-	void Input_MoveAway_Player1(InputAction.CallbackContext ctx)
+	void Input_MoveTargetLeft_Player1(InputAction.CallbackContext ctx)
 	{
-		// If gamepad is not mapped to this player, ignore
-		if (ctx.control.device is Gamepad gamepad)
-		{
-			var playerNumber = GetPlayerNumberFromDeviceId(gamepad.deviceId);
-			if (playerNumber != 1) return;
-		}
+		if (!InputAllowedForPlayer(ctx, 1)) return;
 
-		player1_moveAway.Invoke(ctx);
+		player1_moveTargetLeft.Invoke(ctx);
 	}
 
-	void Input_MoveAway_Player2(InputAction.CallbackContext ctx)
+	void Input_MoveTargetRight_Player1(InputAction.CallbackContext ctx)
 	{
-		// If gamepad is not mapped to this player, ignore
-		if (ctx.control.device is Gamepad gamepad)
-		{
-			var playerNumber = GetPlayerNumberFromDeviceId(gamepad.deviceId);
-			if (playerNumber != 2) return;
-		}
 
-		player2_moveAway.Invoke(ctx);
+		if (!InputAllowedForPlayer(ctx, 1)) return;
+
+		player1_moveTargetRight.Invoke(ctx);
 	}
 
-	void Input_Aim_Player1(InputAction.CallbackContext ctx)
+	void Input_Serve_Player1(InputAction.CallbackContext ctx)
 	{
-		// If gamepad is not mapped to this player, ignore
-		if (ctx.control.device is Gamepad gamepad)
-		{
-			var playerNumber = GetPlayerNumberFromDeviceId(gamepad.deviceId);
-			if (playerNumber != 1) return;
-		}
 
-		player1_aim.Invoke(ctx);
+		if (!InputAllowedForPlayer(ctx, 1)) return;
+
+		player1_serve.Invoke(ctx);
 	}
 
-	void Input_Aim_Player2(InputAction.CallbackContext ctx)
-	{
-		// If gamepad is not mapped to this player, ignore
-		if (ctx.control.device is Gamepad gamepad)
-		{
-			var playerNumber = GetPlayerNumberFromDeviceId(gamepad.deviceId);
-			if (playerNumber != 2) return;
-		}
+	// Player 2
 
-		player2_aim.Invoke(ctx);
+	void Input_MovePlayerLeft_Player2(InputAction.CallbackContext ctx)
+	{
+		if (!InputAllowedForPlayer(ctx, 2)) return;
+
+		player2_movePlayerLeft.Invoke(ctx);
 	}
 
+	void Input_MovePlayerRight_Player2(InputAction.CallbackContext ctx)
+	{
+		if (!InputAllowedForPlayer(ctx, 2)) return;
+
+		player2_movePlayerRight.Invoke(ctx);
+	}
+
+	void Input_MoveTargetLeft_Player2(InputAction.CallbackContext ctx)
+	{
+		if (!InputAllowedForPlayer(ctx, 2)) return;
+
+		player2_moveTargetLeft.Invoke(ctx);
+	}
+
+	void Input_MoveTargetRight_Player2(InputAction.CallbackContext ctx)
+	{
+		if (!InputAllowedForPlayer(ctx, 2)) return;
+
+		player2_moveTargetRight.Invoke(ctx);
+	}
+
+	void Input_Serve_Player2(InputAction.CallbackContext ctx)
+	{
+
+		if (!InputAllowedForPlayer(ctx, 2)) return;
+
+		player2_serve.Invoke(ctx);
+	}
 }

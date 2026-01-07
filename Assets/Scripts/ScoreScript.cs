@@ -45,7 +45,7 @@ public class ScoreScript : MonoBehaviour
         p1Score = p1Score + 1;
         UpdateScoreDisplay();
 
-        UpdateBallSpeed(Side.Left, p1Score);
+        UpdateBallSpeed(1, p1Score);
     }
 
     public void AddScoreP2()
@@ -53,7 +53,7 @@ public class ScoreScript : MonoBehaviour
         p2Score = p2Score + 1;
         UpdateScoreDisplay();
 
-        UpdateBallSpeed(Side.Right, p2Score);
+        UpdateBallSpeed(2, p2Score);
     }
 
     public void UpdateScoreDisplay()
@@ -86,12 +86,12 @@ public class ScoreScript : MonoBehaviour
         SceneManager.LoadScene(currentLevel);
     }
 
-    void UpdateBallSpeed(Side side, int score)
+    void UpdateBallSpeed(int playerNumber, int score)
     {
         float speedModifier = 1 + score * speedModifierPerScore;
 
         var gameManager = FindFirstObjectByType<GameManager>();
-        gameManager.SetSpeedModifier(side, speedModifier);
+        gameManager.SetSpeedModifier(playerNumber, speedModifier);
     }
 
     /*public void backToMain()

@@ -1,24 +1,15 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
 	[SerializeField] Transform aimTarget;
-	[SerializeField] Side side;
 	[SerializeField] GameObject serveBall;
-
-	public Side Side => side;
-
-	List<Transform> leftZones;
-	List<Transform> rightZones;
+	[SerializeField] int playerNumber;
+	public int PlayerNumber => playerNumber;
 	
-	int currentZone;
-	public int CurrentZone => currentZone;
-	public int TargetZone => Mathf.Clamp(currentZone + targetZoneOffset, 0, ZoneUtil.NumberOfZones);
-
-	bool aiming;
-	int targetZoneOffset;
+	public int CurrentPlayerZone { get; private set; }
+	public int CurrentTargetZone {  get; private set; }
 
 	GameManager gameManager;
 
@@ -26,17 +17,16 @@ public class PlayerController : MonoBehaviour
 	{
 		gameManager = FindFirstObjectByType<GameManager>();
 
-		ZoneUtil.GetZones(out leftZones, out rightZones);
-
 		// Start at center zone
 		MoveToZone(2);
+		MoveTargetToZone(2);
 	}
 
 	// Move this player to the given zone index
 	void MoveToZone(int zone)
 	{
-		currentZone = Mathf.Clamp(zone, 0, ZoneUtil.NumberOfZones - 1);
-		var zoneTransform = ZoneUtil.GetZoneTransform(side, currentZone);
+		CurrentPlayerZone = gameManager.ClampZoneIndex(playerNumber, zone);
+		var zoneTransform = gameManager.GetZoneTransform(playerNumber, CurrentPlayerZone);
 
 		transform.position = new Vector3(
 			zoneTransform.position.x,
@@ -48,92 +38,78 @@ public class PlayerController : MonoBehaviour
 	// Move this players target to the given zone index on the other players side
 	void MoveTargetToZone(int zone)
 	{
-		// Inverse
-		var zoneTransforms = side == Side.Left ? rightZones : leftZones;
-		var clampedZoneIndex = Mathf.Clamp(zone, 0, ZoneUtil.NumberOfZones - 1);
-		var targetZone = zoneTransforms[clampedZoneIndex];
+		var otherPlayerNumber = playerNumber == 1 ? 2 : 1;
+
+		CurrentTargetZone = gameManager.ClampZoneIndex(otherPlayerNumber, zone);
+		var zoneTransform = gameManager.GetZoneTransform(otherPlayerNumber, CurrentTargetZone);
 
 		aimTarget.position = new Vector3(
-			targetZone.position.x,
+			zoneTransform.position.x,
 			aimTarget.position.y,
 			aimTarget.position.z
 		);
 	}
 
-	// Input - Move closer to net
-	public void Input_MoveCloser(InputAction.CallbackContext ctx)
+	public void OnAllowServe()
+	{
+		serveBall.SetActive(true);
+	}
+
+	void SetPlayerSquashed(bool squashed)
+	{
+		float yScale = squashed ? 0.75f : 1f;
+		transform.localScale = new Vector3(1, yScale, 1);
+	}
+
+	public void Input_MovePlayerLeft(InputAction.CallbackContext ctx)
 	{
 		if (!ctx.started) return;
 
-		if (aiming)
-		{
-			// If aiming, add to target offset in opposite direction
-			targetZoneOffset += 1;
-		}
-		else
-		{
-			// Move player
-			MoveToZone(currentZone - 1);
-			targetZoneOffset = 0;
-		}
-
-		// Update target position
-		MoveTargetToZone(currentZone + targetZoneOffset);
+		MoveToZone(CurrentPlayerZone - 1);
 	}
 
-	// Input - Move away from net
-	public void Input_MoveAway(InputAction.CallbackContext ctx)
+	public void Input_MovePlayerRight(InputAction.CallbackContext ctx)
 	{
 		if (!ctx.started) return;
 
-		if (aiming)
-		{
-			targetZoneOffset -= 1; // Flip left/right
-		}
-		else
-		{
-			MoveToZone(currentZone + 1);
-			targetZoneOffset = 0;
-		}
-
-		MoveTargetToZone(currentZone + targetZoneOffset);
+		MoveToZone(CurrentPlayerZone + 1);
 	}
 
-	public void Input_Aim(InputAction.CallbackContext ctx)
+	public void Input_MoveTargetLeft(InputAction.CallbackContext ctx)
+	{
+		if (!ctx.started) return;
+
+		MoveTargetToZone(CurrentTargetZone - 1);
+	}
+
+	public void Input_MoveTargetRight(InputAction.CallbackContext ctx)
+	{
+		if (!ctx.started) return;
+
+		MoveTargetToZone(CurrentTargetZone + 1);
+	}
+
+	public void Input_Serve(InputAction.CallbackContext ctx)
 	{
 		if (ctx.started)
 		{
-			aiming = true;
-
 			gameManager.PlayerServeStart(this);
+			SetPlayerSquashed(true);
 		}
 		else if (ctx.canceled)
 		{
-			aiming = false;
-
-			if (gameManager.PlayerServeRelease(this, TargetZone))
+			if (gameManager.PlayerServeRelease(this))
 			{
-				// Disable visuals
+				// Disable ball visuals
 				serveBall.SetActive(false);
 			}
+
+			SetPlayerSquashed(false);
 		}
 		else
 		{
 			// If phase is not started or cancelled, ignore
 			return;
 		}
-
-		// Reset target position
-		targetZoneOffset = 0;
-		MoveTargetToZone(currentZone + targetZoneOffset);
-
-		// Visual
-		float yScale = aiming ? 0.75f : 1f;
-		transform.localScale = new Vector3(1, yScale, 1);
-	}
-
-	public void OnAllowServe()
-	{
-		serveBall.SetActive(true);
 	}
 }
