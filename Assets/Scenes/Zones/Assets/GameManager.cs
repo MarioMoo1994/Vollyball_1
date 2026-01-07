@@ -9,6 +9,7 @@ public class Ball
 	public bool MovingUp;
 	public int CurrentSidePlayerNumber;
 	public int LastHitPlayerNumber;
+	public Vector3 RotationAxis;
 }
 
 public class GameManager : MonoBehaviour
@@ -17,6 +18,7 @@ public class GameManager : MonoBehaviour
 	[SerializeField] float floorHitY = 1;
 	[SerializeField] float ceilingY = 10;
 	[SerializeField] float ballMoveSpeed = 10;
+	[SerializeField] float ballRotationSpeed = 500;
 
 	[SerializeField] PlayerController player1;
 	[SerializeField] PlayerController player2;
@@ -90,6 +92,8 @@ public class GameManager : MonoBehaviour
 				{
 					ball.MovingUp = true;
 					ball.LastHitPlayerNumber = relevantPlayer.PlayerNumber;
+
+					ball.RotationAxis = Random.onUnitSphere;
 				}
 				// Floor hit
 				else if (ball.Transform.position.y < floorHitY)
@@ -115,6 +119,9 @@ public class GameManager : MonoBehaviour
 			var speed = ballMoveSpeed * speedModifier * directionModifier;
 
 			ball.Transform.position += speed * Time.deltaTime * Vector3.up;
+
+			// Rotate
+			ball.Transform.Rotate(ballRotationSpeed * Time.deltaTime * ball.RotationAxis, Space.Self);
 		}
 
 		// Destroy
@@ -151,7 +158,8 @@ public class GameManager : MonoBehaviour
 			Zone = player.CurrentPlayerZone,
 			CurrentSidePlayerNumber = playerNumber,
 			LastHitPlayerNumber = playerNumber,
-			MovingUp = true
+			MovingUp = true,
+			RotationAxis = Random.onUnitSphere
 		};
 		balls.Add(ball);
 	}
