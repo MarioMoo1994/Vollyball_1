@@ -144,7 +144,7 @@
                 {
                     "name": "",
                     "id": "20f2b224-9477-469b-89a7-7193570ebca3",
-                    "path": "<Keyboard>/upArrow",
+                    "path": "<Keyboard>/downArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -155,7 +155,7 @@
                 {
                     "name": "",
                     "id": "ec464a22-9396-406f-8ad9-9370cf82f89e",
-                    "path": "<Gamepad>/buttonNorth",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
