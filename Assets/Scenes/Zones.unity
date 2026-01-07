@@ -1128,6 +1128,7 @@ MonoBehaviour:
   floorHitY: 1
   ceilingY: 10
   ballMoveSpeed: 10
+  ballRotationSpeed: 500
   player1: {fileID: 1678271529}
   player2: {fileID: 2009945261}
   ballPrefab: {fileID: 8947945365994176029, guid: 730e28aaa95f04e458f35cf3c9d42d1b, type: 3}
@@ -2696,7 +2697,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5274652146126060288, guid: 730e28aaa95f04e458f35cf3c9d42d1b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.5
+      value: -0.28
       objectReference: {fileID: 0}
     - target: {fileID: 5274652146126060288, guid: 730e28aaa95f04e458f35cf3c9d42d1b, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2704,7 +2705,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5274652146126060288, guid: 730e28aaa95f04e458f35cf3c9d42d1b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 5274652146126060288, guid: 730e28aaa95f04e458f35cf3c9d42d1b, type: 3}
       propertyPath: m_LocalRotation.w

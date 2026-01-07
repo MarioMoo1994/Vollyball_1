@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class ScoreScript : MonoBehaviour
 {
     public static ScoreScript instance;
+    public bool VictoryAchived = false;
 
     [Header("scoring variables")]
     public int p1Score;
@@ -66,6 +67,7 @@ public class ScoreScript : MonoBehaviour
     {
         if (p1Score >= winScore)
         {
+            VictoryAchived = true;
             //display P1 wins! screen
             Menu.SetActive(true);
             p1WinText.SetActive(true);
@@ -73,6 +75,7 @@ public class ScoreScript : MonoBehaviour
         }
         if (p2Score >= winScore)
         {
+            VictoryAchived = true;
             //display P2 wins! screen
             Menu.SetActive(true);
             p2WinText.SetActive(true);

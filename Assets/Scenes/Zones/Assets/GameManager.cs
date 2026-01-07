@@ -14,6 +14,8 @@ public class Ball
 
 public class GameManager : MonoBehaviour
 {
+	ScoreScript scoreScript;
+
 	[SerializeField] float playerHitY = 3;
 	[SerializeField] float floorHitY = 1;
 	[SerializeField] float ceilingY = 10;
@@ -51,6 +53,7 @@ public class GameManager : MonoBehaviour
 
 	void Start()
 	{
+		scoreScript = FindFirstObjectByType<ScoreScript>();
 		servingPlayer = 1;
 
 		var player = servingPlayer == 1 ? player1 : player2;
@@ -61,68 +64,78 @@ public class GameManager : MonoBehaviour
 	{
 		var ballsToDestroy = new List<Ball>();
 
-		foreach (var ball in balls)
+		if (!scoreScript.VictoryAchived)
 		{
-			// Update state
-			if (ball.MovingUp)
+			foreach (var ball in balls)
 			{
-				// Switch sides if above ceiling
-				if (ball.Transform.position.y > ceilingY)
+				// Update state
+				if (ball.MovingUp)
 				{
-					// Switch side and movement direction
-					ball.CurrentSidePlayerNumber = ball.CurrentSidePlayerNumber == 1 ? 2 : 1;
-					ball.MovingUp = false;
+					// Switch sides if above ceiling
+					if (ball.Transform.position.y > ceilingY)
+					{
+						// Switch side and movement direction
+						ball.CurrentSidePlayerNumber = ball.CurrentSidePlayerNumber == 1 ? 2 : 1;
+						ball.MovingUp = false;
 
-					// Set zone to current target of the player that last hit it
-					var relevantPlayer = ball.LastHitPlayerNumber == player1.PlayerNumber ? player1 : player2;
-					ball.Zone = relevantPlayer.CurrentTargetZone;
+						// Set zone to current target of the player that last hit it
+						var relevantPlayer = ball.LastHitPlayerNumber == player1.PlayerNumber ? player1 : player2;
+						ball.Zone = relevantPlayer.CurrentTargetZone;
 
-					// Move gameobject to zone on other side
-					var zoneTransform = GetZoneTransform(ball.CurrentSidePlayerNumber, ball.Zone);
-					ball.Transform.position = new Vector3(zoneTransform.position.x, ceilingY, 0);
+						// Move gameobject to zone on other side
+						var zoneTransform = GetZoneTransform(ball.CurrentSidePlayerNumber, ball.Zone);
+						ball.Transform.position = new Vector3(zoneTransform.position.x, ceilingY, 0);
+					}
 				}
+				else
+				{
+					var relevantPlayer = ball.CurrentSidePlayerNumber == player1.PlayerNumber ? player1 : player2;
+
+					// Player hit
+					if (ball.Zone == relevantPlayer.CurrentPlayerZone
+						&& ball.Transform.position.y < playerHitY)
+					{
+						ball.MovingUp = true;
+						ball.LastHitPlayerNumber = relevantPlayer.PlayerNumber;
+
+						ball.RotationAxis = Random.onUnitSphere;
+					}
+					// Floor hit
+					else if (ball.Transform.position.y < floorHitY)
+					{
+						if (ball.CurrentSidePlayerNumber == 2) Player1_Point.Invoke();
+						else Player2_Point.Invoke();
+
+						// Reset
+						ballsToDestroy.Add(ball);
+
+						serveStarted = false;
+						serveCompleted = false;
+						servingPlayer = ball.CurrentSidePlayerNumber;
+
+						var player = servingPlayer == 1 ? player1 : player2;
+						player.OnAllowServe();
+					}
+				}
+
+				// Move
+				var directionModifier = ball.MovingUp ? 1f : -1f;
+				var speedModifier = ball.CurrentSidePlayerNumber == 1 ? player1SpeedModifier : player2SpeedModifier;
+				var speed = ballMoveSpeed * speedModifier * directionModifier;
+
+				ball.Transform.position += speed * Time.deltaTime * Vector3.up;
+
+				// Rotate
+				ball.Transform.Rotate(ballRotationSpeed * Time.deltaTime * ball.RotationAxis, Space.Self);
 			}
-			else
-			{
-				var relevantPlayer = ball.CurrentSidePlayerNumber == player1.PlayerNumber ? player1 : player2;
-
-				// Player hit
-				if (ball.Zone == relevantPlayer.CurrentPlayerZone
-					&& ball.Transform.position.y < playerHitY)
-				{
-					ball.MovingUp = true;
-					ball.LastHitPlayerNumber = relevantPlayer.PlayerNumber;
-
-					ball.RotationAxis = Random.onUnitSphere;
-				}
-				// Floor hit
-				else if (ball.Transform.position.y < floorHitY)
-				{
-					if (ball.CurrentSidePlayerNumber == 2) Player1_Point.Invoke();
-					else Player2_Point.Invoke();
-
-					// Reset
-					ballsToDestroy.Add(ball);
-
-					serveStarted = false;
-					serveCompleted = false;
-					servingPlayer = ball.CurrentSidePlayerNumber;
-
-					var player = servingPlayer == 1 ? player1 : player2;
-					player.OnAllowServe();
-				}
-			}
-
-			// Move
-			var directionModifier = ball.MovingUp ? 1f : -1f;
-			var speedModifier = ball.CurrentSidePlayerNumber == 1 ? player1SpeedModifier : player2SpeedModifier;
-			var speed = ballMoveSpeed * speedModifier * directionModifier;
-
-			ball.Transform.position += speed * Time.deltaTime * Vector3.up;
-
-			// Rotate
-			ball.Transform.Rotate(ballRotationSpeed * Time.deltaTime * ball.RotationAxis, Space.Self);
 		}
+		else {
+			foreach (var ball in balls) {
+				ballsToDestroy.Add(ball);
+			}
+
+        }
+
 
 		// Destroy
 		foreach (var ballToDestroy in ballsToDestroy)
