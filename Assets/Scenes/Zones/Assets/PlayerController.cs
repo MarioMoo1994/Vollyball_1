@@ -63,35 +63,35 @@ public class PlayerController : MonoBehaviour
 
 	public void Input_MovePlayerLeft(InputAction.CallbackContext ctx)
 	{
-		if (!ctx.started) return;
+		if (!ctx.performed) return;
 
 		MoveToZone(CurrentPlayerZone - 1);
 	}
 
 	public void Input_MovePlayerRight(InputAction.CallbackContext ctx)
 	{
-		if (!ctx.started) return;
+		if (!ctx.performed) return;
 
 		MoveToZone(CurrentPlayerZone + 1);
 	}
 
 	public void Input_MoveTargetLeft(InputAction.CallbackContext ctx)
 	{
-		if (!ctx.started) return;
+		if (!ctx.performed) return;
 
 		MoveTargetToZone(CurrentTargetZone - 1);
 	}
 
 	public void Input_MoveTargetRight(InputAction.CallbackContext ctx)
 	{
-		if (!ctx.started) return;
+		if (!ctx.performed) return;
 
 		MoveTargetToZone(CurrentTargetZone + 1);
 	}
 
 	public void Input_Serve(InputAction.CallbackContext ctx)
 	{
-		if (ctx.started)
+		if (ctx.performed)
 		{
 			gameManager.PlayerServeStart(this);
 			SetPlayerSquashed(true);
