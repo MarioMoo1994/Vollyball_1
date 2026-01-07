@@ -48,6 +48,17 @@
                 },
                 {
                     "name": "",
+                    "id": "627bc414-5056-4344-9862-88c443606a97",
+                    "path": "<Gamepad>/dpad/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveCloser",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "7035c1ca-5294-48e9-aad5-54c4039be6ac",
                     "path": "<Keyboard>/rightArrow",
                     "interactions": "",
@@ -59,8 +70,30 @@
                 },
                 {
                     "name": "",
+                    "id": "2e466cda-3b5a-4573-994f-5e3c70873000",
+                    "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveAway",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "5a736a4b-9f3f-4bda-9a11-9446b17f7cc2",
                     "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Aim",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "576fb62f-53b1-4979-827c-68d03cbf70c4",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

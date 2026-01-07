@@ -4,7 +4,6 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-	[SerializeField] InputActionAsset inputActions;
 	[SerializeField] Transform aimTarget;
 	[SerializeField] Side side;
 	[SerializeField] GameObject serveBall;
@@ -22,18 +21,6 @@ public class PlayerController : MonoBehaviour
 	int targetZoneOffset;
 
 	GameManager gameManager;
-
-	bool serveAllowed = false;
-
-	void OnEnable()
-	{
-		BindInput();
-	}
-
-	void OnDisable()
-	{
-		UnbindInput();
-	}
 
 	void Start()
 	{
@@ -74,8 +61,10 @@ public class PlayerController : MonoBehaviour
 	}
 
 	// Input - Move closer to net
-	void Input_MoveCloser(InputAction.CallbackContext ctx)
+	public void Input_MoveCloser(InputAction.CallbackContext ctx)
 	{
+		if (!ctx.started) return;
+
 		if (aiming)
 		{
 			// If aiming, add to target offset in opposite direction
@@ -93,8 +82,10 @@ public class PlayerController : MonoBehaviour
 	}
 
 	// Input - Move away from net
-	void Input_MoveAway(InputAction.CallbackContext ctx)
+	public void Input_MoveAway(InputAction.CallbackContext ctx)
 	{
+		if (!ctx.started) return;
+
 		if (aiming)
 		{
 			targetZoneOffset -= 1; // Flip left/right
@@ -108,7 +99,7 @@ public class PlayerController : MonoBehaviour
 		MoveTargetToZone(currentZone + targetZoneOffset);
 	}
 
-	void Input_Aim(InputAction.CallbackContext ctx)
+	public void Input_Aim(InputAction.CallbackContext ctx)
 	{
 		if (ctx.started)
 		{
@@ -122,10 +113,14 @@ public class PlayerController : MonoBehaviour
 
 			if (gameManager.PlayerServeRelease(this, TargetZone))
 			{
-				serveAllowed = false;
 				// Disable visuals
 				serveBall.SetActive(false);
 			}
+		}
+		else
+		{
+			// If phase is not started or cancelled, ignore
+			return;
 		}
 
 		// Reset target position
@@ -139,39 +134,6 @@ public class PlayerController : MonoBehaviour
 
 	public void OnAllowServe()
 	{
-		serveAllowed = true;
 		serveBall.SetActive(true);
-	}
-
-	void BindInput()
-	{
-		var actionMap = inputActions.FindActionMap("ActionMap");
-		actionMap.Enable();
-
-		var moveLeft = actionMap.FindAction("MoveCloser");
-		moveLeft.started += Input_MoveCloser;
-
-		var moveRight = actionMap.FindAction("MoveAway");
-		moveRight.started += Input_MoveAway;
-
-		var aim = actionMap.FindAction("Aim");
-		aim.started += Input_Aim;
-		aim.canceled += Input_Aim;
-	}
-
-	void UnbindInput()
-	{
-		var actionMap = inputActions.FindActionMap("ActionMap");
-		actionMap.Enable();
-
-		var moveLeft = actionMap.FindAction("MoveCloser");
-		moveLeft.started -= Input_MoveCloser;
-
-		var moveRight = actionMap.FindAction("MoveAway");
-		moveRight.started -= Input_MoveAway;
-
-		var aim = actionMap.FindAction("Aim");
-		aim.started -= Input_Aim;
-		aim.canceled -= Input_Aim;
 	}
 }
