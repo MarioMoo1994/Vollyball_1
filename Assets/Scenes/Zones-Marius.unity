@@ -2192,6 +2192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f722d2c05223df49b44d71bb2ca95cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScoreScript
+  VictoryAchived: 0
   p1Score: 0
   p1ScoreText: {fileID: 710383740}
   p2Score: 0
