@@ -1,9 +1,8 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
-using static UnityEditor.Experimental.GraphView.GraphView;
-using static UnityEngine.Rendering.DebugUI;
 
 public class InputController : MonoBehaviour
 {
@@ -20,8 +19,8 @@ public class InputController : MonoBehaviour
 	[SerializeField] UnityEvent<InputAction.CallbackContext> player2_moveAway;
 	[SerializeField] UnityEvent<InputAction.CallbackContext> player2_aim;
 
-	int? gamepad1ID;
-	int? gamepad2ID;
+	readonly List<int> gamepad1Ids = new();
+	readonly List<int> gamepad2Ids = new();
 
 	void OnEnable()
 	{
@@ -59,15 +58,22 @@ public class InputController : MonoBehaviour
 
 	int GetPlayerNumberFromDeviceId(int deviceId)
 	{
-		var s = "GetPlayerNumberFromDeviceId";
-		s += "\ndeviceId: " + deviceId;
+		// If bound to a player, return that player number
+		if (gamepad1Ids.Contains(deviceId)) return 1;
+		if (gamepad2Ids.Contains(deviceId)) return 2;
 
-		if (gamepad1ID == null) gamepad1ID = deviceId;
-		else if (gamepad2ID == null) gamepad2ID = deviceId;
-
-		if (deviceId == gamepad1ID) return 1;
-		else if (deviceId == gamepad2ID) return 2;
-		else return -1;
+		// Bind to player with fewest devices bound to them
+		// Return player number device was bound to
+		if (gamepad1Ids.Count <= gamepad2Ids.Count)
+		{
+			gamepad1Ids.Add(deviceId);
+			return 1;
+		}
+		else
+		{
+			gamepad2Ids.Add(deviceId);
+			return 2;
+		}
 	}
 
 	static void BindInput(InputAction action, Action<InputAction.CallbackContext> callback)
