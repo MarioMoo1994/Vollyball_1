@@ -1,13 +1,18 @@
 using UnityEngine;
+using System.Collections;
 
-public class VolleyballBall : MonoBehaviour
+public class VolleyballBallRespawn : MonoBehaviour
 {
-    [Header("Ball Movement")]
-    public float hitForceX = 5f;      // Hvor langt ballen slås i X-retning
-    public float hitForceY = 6f;      // Hvor høyt ballen går
-    public float ballSpeed = 1f;      // Generell fart-multiplikator
+    [Header("Spawn Points")]
+    public Transform spawnPlayer1;
+    public Transform spawnPlayer2;
+
+    [Header("Serve Settings")]
+    public float serveDelay = 2f;
+    public float serveUpForce = 4f;
 
     private Rigidbody rb;
+    private bool isServing;
 
     void Awake()
     {
@@ -16,30 +21,42 @@ public class VolleyballBall : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        // Player 1 slår ballen mot høyre (+X)
-        if (collision.gameObject.CompareTag("Player_1"))
+        if (isServing)
+            return;
+
+        if (collision.gameObject.CompareTag("Ground_Player_1"))
         {
-            HitBall(Vector3.right);
+            StartCoroutine(RespawnAndServe(spawnPlayer1));
         }
 
-        // Player 2 slår ballen mot venstre (-X)
-        if (collision.gameObject.CompareTag("Player_2"))
+        if (collision.gameObject.CompareTag("Ground_Player_2"))
         {
-            HitBall(Vector3.left);
+            StartCoroutine(RespawnAndServe(spawnPlayer2));
         }
     }
 
-    void HitBall(Vector3 direction)
+    IEnumerator RespawnAndServe(Transform spawnPoint)
     {
-        // Nullstill nåværende fart for konsistent slag
+        isServing = true;
+
+        // Nullstill fysikk
         rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
 
-        Vector3 force = new Vector3(
-            direction.x * hitForceX,
-            hitForceY,
-            0f
-        );
+        // Flytt ballen
+        transform.position = spawnPoint.position;
 
-        rb.linearVelocity = force * ballSpeed;
+        // Midlertidig "freeze" ballen i lufta
+        rb.isKinematic = true;
+
+        // Vent før serve
+        yield return new WaitForSeconds(serveDelay);
+
+        rb.isKinematic = false;
+
+        // Gi ballen et lite dytt oppover
+        rb.linearVelocity = Vector3.up * serveUpForce;
+
+        isServing = false;
     }
 }
