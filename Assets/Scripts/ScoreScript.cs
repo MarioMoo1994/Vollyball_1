@@ -14,7 +14,7 @@ public class ScoreScript : MonoBehaviour
     public int p2Score;
     public TMP_Text p2ScoreText;
     public int winScore = 5;
-    
+    public float speedModifierPerScore = 2f;
 
     [Header("restart & game nav variables")]
     public GameObject p1WinText;
@@ -44,12 +44,16 @@ public class ScoreScript : MonoBehaviour
     {
         p1Score = p1Score + 1;
         UpdateScoreDisplay();
+
+        UpdateBallSpeed(Side.Left, p1Score);
     }
 
     public void AddScoreP2()
     {
         p2Score = p2Score + 1;
         UpdateScoreDisplay();
+
+        UpdateBallSpeed(Side.Right, p2Score);
     }
 
     public void UpdateScoreDisplay()
@@ -80,6 +84,14 @@ public class ScoreScript : MonoBehaviour
     public void RestartGame()
     {
         SceneManager.LoadScene(currentLevel);
+    }
+
+    void UpdateBallSpeed(Side side, int score)
+    {
+        float speedModifier = 1 + score * speedModifierPerScore;
+
+        var gameManager = FindFirstObjectByType<GameManager>();
+        gameManager.SetSpeedModifier(side, speedModifier);
     }
 
     /*public void backToMain()

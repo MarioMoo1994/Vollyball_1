@@ -1756,6 +1756,7 @@ MonoBehaviour:
   p2Score: 0
   p2ScoreText: {fileID: 2037670043}
   winScore: 5
+  speedModifierPerScore: 0.2
   p1WinText: {fileID: 1485674997}
   p2WinText: {fileID: 639926801}
   Menu: {fileID: 415750685}
