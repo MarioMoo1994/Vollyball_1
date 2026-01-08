@@ -27,6 +27,7 @@ public class ButtonNavigator : MonoBehaviour
 
     public void MoveLeft() {
         if (CurrentBtn != BtnList[0] && !Panel) {
+            EventSystem.current.SetSelectedGameObject(null);
             int index = BtnList.IndexOf(CurrentBtn);
             CurrentBtn = BtnList[index - 1];
             EventSystem.current.SetSelectedGameObject(CurrentBtn.gameObject);
@@ -35,8 +36,9 @@ public class ButtonNavigator : MonoBehaviour
 
     public void MoveRight()
     {
-        if (CurrentBtn != BtnList[BtnList.Count-1] && !Panel)
+        if (CurrentBtn != BtnList[^1] && !Panel)
         {
+            EventSystem.current.SetSelectedGameObject(null);
             int index = BtnList.IndexOf(CurrentBtn);
             CurrentBtn = BtnList[index + 1];
             EventSystem.current.SetSelectedGameObject(CurrentBtn.gameObject);
@@ -52,13 +54,11 @@ public class ButtonNavigator : MonoBehaviour
 
         if (Panel && CurrentBtn == ReturnBtn)
         {
-            Debug.Log("after panel");
             ResetBtn();
             Panel = false;
         }
 
         if (!Panel && CurrentBtn == PanelBtn) {
-            Debug.Log("should change");
             PanelChange();
         }
     }
