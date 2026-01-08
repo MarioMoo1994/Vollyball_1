@@ -1308,6 +1308,117 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1398346986}
   m_CullTransparentMesh: 1
+--- !u!1 &1501123435
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1501123437}
+  - component: {fileID: 1501123438}
+  - component: {fileID: 1501123436}
+  m_Layer: 0
+  m_Name: Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1501123436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1501123435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8630f3379173e7a498f44c6a304c0512, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MainMenuInput
+  inputActions_player1: {fileID: -944628639613478452, guid: 0ad4e6d6f46746845bb1e8da3b8ca84e, type: 3}
+  controller_Left:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1501123438}
+        m_TargetAssemblyTypeName: ButtonNavigator, Assembly-CSharp
+        m_MethodName: MoveLeft
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  controller_Right:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1501123438}
+        m_TargetAssemblyTypeName: ButtonNavigator, Assembly-CSharp
+        m_MethodName: MoveRight
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  controller_Press:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1501123438}
+        m_TargetAssemblyTypeName: ButtonNavigator, Assembly-CSharp
+        m_MethodName: Press
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!4 &1501123437
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1501123435}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 20.95474, y: 0, z: 51.59287}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1501123438
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1501123435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fa40aaf6aefb2b4cb8041ea1785313f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonNavigator
+  BtnList:
+  - {fileID: 239035175}
+  - {fileID: 127074799}
+  - {fileID: 207084931}
+  ReturnBtn: {fileID: 1335814600}
+  PanelBtn: {fileID: 127074799}
+  Panel: 0
+  CurrentBtn: {fileID: 0}
 --- !u!1 &1547310731
 GameObject:
   m_ObjectHideFlags: 0
@@ -1542,3 +1653,4 @@ SceneRoots:
   - {fileID: 1379783850}
   - {fileID: 1833596683}
   - {fileID: 2102430910}
+  - {fileID: 1501123437}
