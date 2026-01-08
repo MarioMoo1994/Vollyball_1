@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using System;
 
 public class ScoreScript : MonoBehaviour
 {
@@ -59,8 +60,15 @@ public class ScoreScript : MonoBehaviour
 
     public void UpdateScoreDisplay()
     {
-        p1ScoreText.text = p1Score.ToString();
-        p2ScoreText.text = p2Score.ToString();
+        string score1Reformat;
+        string score2Reformat;
+        score1Reformat = p1Score.ToString();
+        score2Reformat = p2Score.ToString();
+        p1ScoreText.text = score1Reformat.PadLeft(2, '0');
+        p2ScoreText.text = score2Reformat.PadLeft(2, '0');
+        //testing a reformatting to have a leading zero in scoreboard. below is old way with only 1 digit.
+        //p1ScoreText.text = p1Score.ToString();
+        //p2ScoreText.text = p2Score.ToString();
     }
 
     public void WinCondition()
@@ -86,6 +94,7 @@ public class ScoreScript : MonoBehaviour
 
     public void RestartGame()
     {
+        //for UI button restart on win/lose
         SceneManager.LoadScene(currentLevel);
     }
 
@@ -97,9 +106,10 @@ public class ScoreScript : MonoBehaviour
         gameManager.SetSpeedModifier(playerNumber, speedModifier);
     }
 
-    /*public void backToMain()
+    public void backToMain()
     {
-        //go back to main menu from game scene
-    }*/
+        //go back to main menu on win/lose
+        SceneManager.LoadScene(0);
+    }
 
 }
