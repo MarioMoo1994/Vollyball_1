@@ -6,7 +6,8 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] Transform aimTarget;
 	[SerializeField] GameObject serveBall;
 	[SerializeField] int playerNumber;
-	public int PlayerNumber => playerNumber;
+    [SerializeField] int rotationAngle = 20;
+    public int PlayerNumber => playerNumber;
 	
 	public int CurrentPlayerZone { get; private set; }
 	public int CurrentTargetZone {  get; private set; }
@@ -48,6 +49,9 @@ public class PlayerController : MonoBehaviour
 			aimTarget.position.y,
 			aimTarget.position.z
 		);
+
+		aimTarget.rotation = Quaternion.Euler(0,0, rotationAngle);
+		rotationAngle *= -1;
 	}
 
 	public void OnAllowServe()
