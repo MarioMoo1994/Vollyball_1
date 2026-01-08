@@ -35,6 +35,10 @@ public class GameManager : MonoBehaviour
 	[Header("Events")]
 	[SerializeField] UnityEvent Player1_Point;
 	[SerializeField] UnityEvent Player2_Point;
+	[SerializeField] UnityEvent BallHitPlayer;
+	[SerializeField] UnityEvent BallHitGround;
+	[SerializeField] UnityEvent ServeStart;
+	[SerializeField] UnityEvent ServeRelease;
 
 	readonly List<Ball> balls = new();
 
@@ -104,6 +108,8 @@ public class GameManager : MonoBehaviour
 						ball.LastHitPlayerNumber = relevantPlayer.PlayerNumber;
 
 						ball.RotationAxis = Random.onUnitSphere;
+
+						BallHitPlayer.Invoke();
 					}
 					// Floor hit
 					else if (ball.Transform.position.y < floorHitY)
@@ -123,6 +129,8 @@ public class GameManager : MonoBehaviour
 
 						NewBallModelIndex();
 						SetBallModel(player.ServeBall.transform);
+
+						BallHitGround.Invoke();
 					}
 				}
 
@@ -190,6 +198,7 @@ public class GameManager : MonoBehaviour
 		if (player.PlayerNumber != servingPlayer) return false;
 
 		serveStarted = true;
+		ServeStart.Invoke();
 
 		return true;
 	}
@@ -201,6 +210,7 @@ public class GameManager : MonoBehaviour
 
 		serveCompleted = true;
 		SpawnBallPlayer(player.PlayerNumber);
+		ServeRelease.Invoke();
 
 		return true;
 	}
