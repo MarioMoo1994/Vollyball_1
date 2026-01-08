@@ -637,7 +637,7 @@ MonoBehaviour:
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
-  m_Antialiasing: 0
+  m_Antialiasing: 1
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0
@@ -1404,6 +1404,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  BallHitPlayer:
+    m_PersistentCalls:
+      m_Calls: []
+  BallHitGround:
+    m_PersistentCalls:
+      m_Calls: []
+  ServeStart:
+    m_PersistentCalls:
+      m_Calls: []
+  ServeRelease:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &639926801
 GameObject:
   m_ObjectHideFlags: 0
