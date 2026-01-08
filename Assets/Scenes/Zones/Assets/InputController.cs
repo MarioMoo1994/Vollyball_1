@@ -23,6 +23,10 @@ public class InputController : MonoBehaviour
 	[SerializeField] UnityEvent<InputAction.CallbackContext> player2_moveTargetRight;
 	[SerializeField] UnityEvent<InputAction.CallbackContext> player2_serve;
 
+	[Header("Any Controller")]
+	[SerializeField] UnityEvent<InputAction.CallbackContext> controller_Start;
+	[SerializeField] UnityEvent<InputAction.CallbackContext> controller_Back;
+
 	readonly List<int> gamepad1Ids = new();
 	readonly List<int> gamepad2Ids = new();
 
@@ -36,6 +40,8 @@ public class InputController : MonoBehaviour
 		BindInput(inputActionMap_player1.FindAction("MoveTargetLeft", true), Input_MoveTargetLeft_Player1);
 		BindInput(inputActionMap_player1.FindAction("MoveTargetRight", true), Input_MoveTargetRight_Player1);
 		BindInput(inputActionMap_player1.FindAction("Serve", true), Input_Serve_Player1);
+		BindInput(inputActionMap_player1.FindAction("Start", true), Input_Start);
+		BindInput(inputActionMap_player1.FindAction("Back", true), Input_Back);
 
 		var inputActionMap_player2 = inputActions_player2.FindActionMap("ActionMap", true);
 		inputActionMap_player2.Enable();
@@ -45,6 +51,8 @@ public class InputController : MonoBehaviour
 		BindInput(inputActionMap_player2.FindAction("MoveTargetLeft", true), Input_MoveTargetLeft_Player2);
 		BindInput(inputActionMap_player2.FindAction("MoveTargetRight", true), Input_MoveTargetRight_Player2);
 		BindInput(inputActionMap_player2.FindAction("Serve", true), Input_Serve_Player2);
+		BindInput(inputActionMap_player2.FindAction("Start", true), Input_Start);
+		BindInput(inputActionMap_player2.FindAction("Back", true), Input_Back);
 	}
 
 	void OnDisable()
@@ -57,6 +65,8 @@ public class InputController : MonoBehaviour
 		UnbindInput(inputActionMap_player1.FindAction("MoveTargetLeft", true), Input_MoveTargetLeft_Player1);
 		UnbindInput(inputActionMap_player1.FindAction("MoveTargetRight", true), Input_MoveTargetRight_Player1);
 		UnbindInput(inputActionMap_player1.FindAction("Serve", true), Input_Serve_Player1);
+		UnbindInput(inputActionMap_player1.FindAction("Start", true), Input_Start);
+		UnbindInput(inputActionMap_player1.FindAction("Back", true), Input_Back);
 
 		var inputActionMap_player2 = inputActions_player2.FindActionMap("ActionMap", true);
 		inputActionMap_player2.Enable();
@@ -66,6 +76,8 @@ public class InputController : MonoBehaviour
 		UnbindInput(inputActionMap_player2.FindAction("MoveTargetLeft", true), Input_MoveTargetLeft_Player2);
 		UnbindInput(inputActionMap_player2.FindAction("MoveTargetRight", true), Input_MoveTargetRight_Player2);
 		UnbindInput(inputActionMap_player2.FindAction("Serve", true), Input_Serve_Player2);
+		UnbindInput(inputActionMap_player2.FindAction("Start", true), Input_Start);
+		UnbindInput(inputActionMap_player2.FindAction("Back", true), Input_Back);
 	}
 
 	int GetPlayerNumberFromDeviceId(int deviceId)
@@ -187,9 +199,24 @@ public class InputController : MonoBehaviour
 
 	void Input_Serve_Player2(InputAction.CallbackContext ctx)
 	{
-
 		if (!InputAllowedForPlayer(ctx, 2)) return;
 
 		player2_serve.Invoke(ctx);
+	}
+
+	// Any controller
+
+	void Input_Start(InputAction.CallbackContext ctx)
+	{
+		if (!ctx.performed) return;
+
+		controller_Start.Invoke(ctx);
+	}
+
+	void Input_Back(InputAction.CallbackContext ctx)
+	{
+		if (!ctx.performed) return;
+
+		controller_Back.Invoke(ctx);
 	}
 }

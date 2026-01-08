@@ -94,6 +94,8 @@ public class ScoreScript : MonoBehaviour
 
     public void RestartGame()
     {
+        if (!VictoryAchived) return;
+
         //for UI button restart on win/lose
         SceneManager.LoadScene(currentLevel);
     }
@@ -108,6 +110,8 @@ public class ScoreScript : MonoBehaviour
 
     public void backToMain()
     {
+        if (!VictoryAchived) return;
+
         //go back to main menu on win/lose
         SceneManager.LoadScene(0);
     }
