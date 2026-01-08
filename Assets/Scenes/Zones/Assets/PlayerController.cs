@@ -6,9 +6,10 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] Transform aimTarget;
 	[SerializeField] GameObject serveBall;
 	[SerializeField] int playerNumber;
-    [SerializeField] int rotationAngle = 20;
-    public int PlayerNumber => playerNumber;
-	
+	[SerializeField] int rotationAngle = 20;
+	public int PlayerNumber => playerNumber;
+	public GameObject ServeBall => serveBall;
+
 	public int CurrentPlayerZone { get; private set; }
 	public int CurrentTargetZone {  get; private set; }
 

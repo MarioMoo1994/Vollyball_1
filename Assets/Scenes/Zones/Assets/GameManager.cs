@@ -45,6 +45,8 @@ public class GameManager : MonoBehaviour
 	bool serveStarted = false;
 	bool serveCompleted = false;
 
+	int ballModelIndex;
+
 	public void SetSpeedModifier(int playerNumber, float modifier)
 	{
 		if (playerNumber == 1) player1SpeedModifier = modifier;
@@ -58,6 +60,9 @@ public class GameManager : MonoBehaviour
 
 		var player = servingPlayer == 1 ? player1 : player2;
 		player.OnAllowServe();
+
+		NewBallModelIndex();
+		SetBallModel(player.ServeBall.transform);
 	}
 
 	void Update()
@@ -115,6 +120,9 @@ public class GameManager : MonoBehaviour
 
 						var player = servingPlayer == 1 ? player1 : player2;
 						player.OnAllowServe();
+
+						NewBallModelIndex();
+						SetBallModel(player.ServeBall.transform);
 					}
 				}
 
@@ -129,13 +137,10 @@ public class GameManager : MonoBehaviour
 				ball.Transform.Rotate(ballRotationSpeed * Time.deltaTime * ball.RotationAxis, Space.Self);
 			}
 		}
-		else {
-			foreach (var ball in balls) {
-				ballsToDestroy.Add(ball);
-			}
-
-        }
-
+		else 
+		{
+			ballsToDestroy.AddRange(balls);
+		}
 
 		// Destroy
 		foreach (var ballToDestroy in ballsToDestroy)
@@ -164,6 +169,8 @@ public class GameManager : MonoBehaviour
 
 		var obj = Instantiate(ballPrefab);
 		obj.transform.position = new Vector3(zoneTransform.position.x, playerHitY, 0);
+
+		SetBallModel(obj.transform);
 
 		var ball = new Ball()
 		{
@@ -196,5 +203,28 @@ public class GameManager : MonoBehaviour
 		SpawnBallPlayer(player.PlayerNumber);
 
 		return true;
+	}
+
+	void NewBallModelIndex()
+	{
+		var lastBallModelIndex = ballModelIndex;
+		while (ballModelIndex == lastBallModelIndex && ballPrefab.transform.childCount > 1)
+		{
+			ballModelIndex = Random.Range(0, ballPrefab.transform.childCount);
+		}
+	}
+
+	void SetBallModel(Transform ball)
+	{
+		var immediateChildren = new List<Transform>();
+		foreach (Transform child in ball)
+		{
+			immediateChildren.Add(child);
+		}
+
+		for (int i = 0; i < immediateChildren.Count; i++)
+		{
+			immediateChildren[i].gameObject.SetActive(i == ballModelIndex);
+		}
 	}
 }
