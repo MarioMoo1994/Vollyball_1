@@ -7,6 +7,10 @@ public class AudioManager : MonoBehaviour
     public AudioClip Hit;
     public AudioClip Whistle;
     public AudioClip Ambiance;
+    public AudioClip Grynt1;
+    public AudioClip Grynt2;
+    public AudioClip Sand1;
+    public AudioClip Sand2;
 
         private void Start()
     {
