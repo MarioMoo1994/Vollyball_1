@@ -3929,6 +3929,10 @@ MonoBehaviour:
   Hit: {fileID: 8300000, guid: b757a1192a955b843ad3b30313f4a032, type: 3}
   Whistle: {fileID: 8300000, guid: 5d6ed0818ef59e04bb16e5873d06d937, type: 3}
   Ambiance: {fileID: 8300000, guid: 40aa5f3fadd5f10479239522df43a25f, type: 3}
+  Grynt1: {fileID: 8300000, guid: 967d92a724454684da0761bd8fff5e3f, type: 3}
+  Grynt2: {fileID: 8300000, guid: ebbd9f6d9816f574a964361e4bd8b8d5, type: 3}
+  Sand1: {fileID: 8300000, guid: 7b745750159b60548be70167cd428b59, type: 3}
+  Sand2: {fileID: 8300000, guid: 54db46d968de98f4c9a079bad4ca76ec, type: 3}
 --- !u!1 &1584048040
 GameObject:
   m_ObjectHideFlags: 0
