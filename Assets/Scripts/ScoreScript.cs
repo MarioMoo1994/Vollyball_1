@@ -26,6 +26,8 @@ public class ScoreScript : MonoBehaviour
     private int currentLevel;
 
     AudioManager audioManager;
+    bool isFinishPlaying = false;
+    bool isKidsPlaying = false;
 
     public void Awake()
     {
@@ -80,19 +82,21 @@ public class ScoreScript : MonoBehaviour
     void finishSFX()
     {
         //plays "finish him" sfx when one point left to win, plays too many time probably from being in update
-        if(p1Score == lastPoint)
+        if(p1Score == lastPoint && !isFinishPlaying)
         {
             audioManager.PlaySFX(audioManager.Finish);
+            isFinishPlaying = true;
         }
-        if(p2Score == lastPoint)
+        if(p2Score == lastPoint && !isFinishPlaying)
         {
             audioManager.PlaySFX(audioManager.Finish);
+            isFinishPlaying = true;
         }
     }    
 
     public void WinCondition()
     {
-        if (p1Score >= winScore)
+        if (p1Score >= winScore && !isKidsPlaying)
         {
             VictoryAchived = true;
             //display P1 wins! screen
@@ -100,9 +104,10 @@ public class ScoreScript : MonoBehaviour
             p1WinText.SetActive(true);
             p2WinText.SetActive(false);
             audioManager.PlaySFX(audioManager.Kids); //this plays too many times probably from being in update
+            isKidsPlaying = true;
 
         }
-        if (p2Score >= winScore)
+        if (p2Score >= winScore && !isKidsPlaying)
         {
             VictoryAchived = true;
             //display P2 wins! screen
@@ -110,6 +115,7 @@ public class ScoreScript : MonoBehaviour
             p2WinText.SetActive(true);
             p1WinText.SetActive(false);
             audioManager.PlaySFX(audioManager.Kids);
+            isKidsPlaying = true;
         }
         //update text to Marius' animations later
     }
