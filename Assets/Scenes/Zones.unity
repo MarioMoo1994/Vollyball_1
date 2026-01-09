@@ -2297,6 +2297,8 @@ MonoBehaviour:
   Grynt2: {fileID: 8300000, guid: ebbd9f6d9816f574a964361e4bd8b8d5, type: 3}
   Sand1: {fileID: 8300000, guid: 7b745750159b60548be70167cd428b59, type: 3}
   Sand2: {fileID: 8300000, guid: 54db46d968de98f4c9a079bad4ca76ec, type: 3}
+  Kids: {fileID: 8300000, guid: 97fecde9f89d5c742af070504fada343, type: 3}
+  Finish: {fileID: 8300000, guid: 6312a0c565069cb48abb9d8df3f09a2c, type: 3}
 --- !u!4 &937031443
 Transform:
   m_ObjectHideFlags: 0

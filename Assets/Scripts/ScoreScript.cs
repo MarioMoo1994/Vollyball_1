@@ -17,6 +17,7 @@ public class ScoreScript : MonoBehaviour
     public TMP_Text p2ScoreText;
     public int winScore = 5;
     public float speedModifierPerScore = 2f;
+    int lastPoint;
 
     [Header("restart & game nav variables")]
     public GameObject p1WinText;
@@ -24,15 +25,19 @@ public class ScoreScript : MonoBehaviour
     public GameObject Menu;
     private int currentLevel;
 
+    AudioManager audioManager;
+
     public void Awake()
     {
         instance = this;
         currentLevel = SceneManager.GetActiveScene().buildIndex;
         Menu.SetActive(false);
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        lastPoint = winScore - 1;
         p1Score = 0;
         p2Score = 0;
         UpdateScoreDisplay();
@@ -40,6 +45,7 @@ public class ScoreScript : MonoBehaviour
     public void Update()
     {
         WinCondition();
+        finishSFX();
     }
 
     public void AddScoreP1()
@@ -71,6 +77,19 @@ public class ScoreScript : MonoBehaviour
         //p2ScoreText.text = p2Score.ToString();
     }
 
+    void finishSFX()
+    {
+        //plays "finish him" sfx when one point left to win, plays too many time probably from being in update
+        if(p1Score == lastPoint)
+        {
+            audioManager.PlaySFX(audioManager.Finish);
+        }
+        if(p2Score == lastPoint)
+        {
+            audioManager.PlaySFX(audioManager.Finish);
+        }
+    }    
+
     public void WinCondition()
     {
         if (p1Score >= winScore)
@@ -80,6 +99,8 @@ public class ScoreScript : MonoBehaviour
             Menu.SetActive(true);
             p1WinText.SetActive(true);
             p2WinText.SetActive(false);
+            audioManager.PlaySFX(audioManager.Kids); //this plays too many times probably from being in update
+
         }
         if (p2Score >= winScore)
         {
@@ -88,6 +109,7 @@ public class ScoreScript : MonoBehaviour
             Menu.SetActive(true);
             p2WinText.SetActive(true);
             p1WinText.SetActive(false);
+            audioManager.PlaySFX(audioManager.Kids);
         }
         //update text to Marius' animations later
     }
