@@ -73,8 +73,8 @@ public class PlayerController : MonoBehaviour
 	{
 		float yScale = squashed ? 0.75f : 1f;
 		transform.localScale = new Vector3(1, yScale, 1);
-        //Grynt1 lyd
-        audioManager.PlaySFX(audioManager.Grynt1);
+        //Grynt1 lyd, testing in event system instead
+        //audioManager.PlaySFX(audioManager.Grynt1);
     }
 
 	public void Input_MovePlayerLeft(InputAction.CallbackContext ctx)
