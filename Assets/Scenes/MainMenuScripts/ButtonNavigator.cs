@@ -12,11 +12,12 @@ public class ButtonNavigator : MonoBehaviour
     public Button PanelBtn;
     public bool Panel = false;
     public Button CurrentBtn;
+    [SerializeField] EventSystem eventSystem;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        ResetBtn();
+        //ResetBtn();
     }
 
     // Update is called once per frame
@@ -25,55 +26,61 @@ public class ButtonNavigator : MonoBehaviour
         
     }
 
-    public void MoveLeft() {
-        if (CurrentBtn != BtnList[0] && !Panel) {
-            EventSystem.current.SetSelectedGameObject(null);
-            int index = BtnList.IndexOf(CurrentBtn);
-            CurrentBtn = BtnList[index - 1];
-            EventSystem.current.SetSelectedGameObject(CurrentBtn.gameObject);
-        }
+    public void ToPanel(GameObject btn) {
+        eventSystem.SetSelectedGameObject(btn);
     }
 
-    public void MoveRight()
-    {
-        if (CurrentBtn != BtnList[^1] && !Panel)
-        {
-            EventSystem.current.SetSelectedGameObject(null);
-            int index = BtnList.IndexOf(CurrentBtn);
-            CurrentBtn = BtnList[index + 1];
-            EventSystem.current.SetSelectedGameObject(CurrentBtn.gameObject);
-        }
+    public void Return(GameObject btn) {
+        eventSystem.SetSelectedGameObject(btn);
     }
 
-    public void Press()
-    {
+    //public void MoveLeft() {
 
-        if (CurrentBtn != null) { 
-            CurrentBtn.onClick.Invoke();
-        }
+    //    if (CurrentBtn != BtnList[0] && !Panel) {
+    //        int index = BtnList.IndexOf(CurrentBtn);
+    //        CurrentBtn = BtnList[index - 1];
+    //        eventSystem.SetSelectedGameObject(CurrentBtn.gameObject);
+    //    }
+    //}
 
-        if (Panel && CurrentBtn == ReturnBtn)
-        {
-            ResetBtn();
-            Panel = false;
-        }
+    //public void MoveRight()
+    //{
+    //    if (CurrentBtn != BtnList[^1] && !Panel)
+    //    {
+    //        int index = BtnList.IndexOf(CurrentBtn);
+    //        CurrentBtn = BtnList[index + 1];
+    //        eventSystem.SetSelectedGameObject(CurrentBtn.gameObject);
+    //    }
+    //}
 
-        if (!Panel && CurrentBtn == PanelBtn) {
-            PanelChange();
-        }
-    }
+    //public void Press()
+    //{
+    //    if (CurrentBtn != null) { 
+    //        CurrentBtn.onClick.Invoke();
+    //    }
 
-    public void PanelChange() {
-        if (!Panel)
-        {
-            Panel = true;
-            CurrentBtn = ReturnBtn;
-            EventSystem.current.SetSelectedGameObject(CurrentBtn.gameObject);
-        }
-    }
+    //    if (Panel && CurrentBtn == ReturnBtn)
+    //    {
+    //        ResetBtn();
+    //        Panel = false;
+    //    }
 
-    public void ResetBtn() {
-        CurrentBtn = BtnList[0];
-        EventSystem.current.SetSelectedGameObject(CurrentBtn.gameObject);
-    }
+    //    if (!Panel && CurrentBtn == PanelBtn) {
+    //        PanelChange();
+    //    }
+    //}
+
+    //public void PanelChange() {
+    //    if (!Panel)
+    //    {
+    //        Panel = true;
+    //        CurrentBtn = ReturnBtn;
+    //        eventSystem.SetSelectedGameObject(CurrentBtn.gameObject);
+    //    }
+    //}
+
+    //public void ResetBtn() {
+    //    CurrentBtn = BtnList[0];
+    //    eventSystem.SetSelectedGameObject(CurrentBtn.gameObject);
+    //}
 }
