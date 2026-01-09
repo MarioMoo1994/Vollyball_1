@@ -14,8 +14,15 @@ public class PlayerController : MonoBehaviour
 	public int CurrentTargetZone {  get; private set; }
 
 	GameManager gameManager;
+	AudioManager audioManager;
 
-	void Start()
+    private void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio")
+            .GetComponent<AudioManager>();
+    }
+
+    void Start()
 	{
 		gameManager = FindFirstObjectByType<GameManager>();
 
@@ -58,33 +65,39 @@ public class PlayerController : MonoBehaviour
 	public void OnAllowServe()
 	{
 		serveBall.SetActive(true);
-	}
+		//Whistle lyd
+        audioManager.PlaySFX(audioManager.Whistle);
+    }
 
 	void SetPlayerSquashed(bool squashed)
 	{
 		float yScale = squashed ? 0.75f : 1f;
 		transform.localScale = new Vector3(1, yScale, 1);
-	}
+        //Grynt1 lyd
+        audioManager.PlaySFX(audioManager.Grynt1);
+    }
 
 	public void Input_MovePlayerLeft(InputAction.CallbackContext ctx)
 	{
 		if (!ctx.performed) return;
 
 		MoveToZone(CurrentPlayerZone - 1);
-	}
+    }
 
 	public void Input_MovePlayerRight(InputAction.CallbackContext ctx)
 	{
 		if (!ctx.performed) return;
 
 		MoveToZone(CurrentPlayerZone + 1);
-	}
+    }
 
 	public void Input_MoveTargetLeft(InputAction.CallbackContext ctx)
 	{
 		if (!ctx.performed) return;
 
 		MoveTargetToZone(CurrentTargetZone - 1);
+		//Sand1 lyd
+		audioManager.PlaySFX(audioManager.Sand1);
 	}
 
 	public void Input_MoveTargetRight(InputAction.CallbackContext ctx)
@@ -92,7 +105,9 @@ public class PlayerController : MonoBehaviour
 		if (!ctx.performed) return;
 
 		MoveTargetToZone(CurrentTargetZone + 1);
-	}
+        //Sand2 lyd
+        audioManager.PlaySFX(audioManager.Sand2);
+    }
 
 	public void Input_Serve(InputAction.CallbackContext ctx)
 	{

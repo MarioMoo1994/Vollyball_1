@@ -51,7 +51,15 @@ public class GameManager : MonoBehaviour
 
 	int ballModelIndex;
 
-	public void SetSpeedModifier(int playerNumber, float modifier)
+    AudioManager audioManager;
+
+    private void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio")
+            .GetComponent<AudioManager>();
+    }
+
+    public void SetSpeedModifier(int playerNumber, float modifier)
 	{
 		if (playerNumber == 1) player1SpeedModifier = modifier;
 		else if (playerNumber == 2) player2SpeedModifier = modifier;
@@ -110,7 +118,10 @@ public class GameManager : MonoBehaviour
 						ball.RotationAxis = Random.onUnitSphere;
 
 						BallHitPlayer.Invoke();
-					}
+
+                        //Grynt1 lyd
+                        audioManager.PlaySFX(audioManager.Hit);
+                    }
 					// Floor hit
 					else if (ball.Transform.position.y < floorHitY)
 					{
