@@ -11,7 +11,8 @@ public class AudioManager : MonoBehaviour
     public AudioClip Grynt2;
     public AudioClip Sand1;
     public AudioClip Sand2;
-
+    public AudioClip Kids;
+    public AudioClip Finish;
         private void Start()
     {
         MusicSource.clip = Ambiance;
