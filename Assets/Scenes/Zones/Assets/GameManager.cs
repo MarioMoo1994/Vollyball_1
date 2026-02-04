@@ -119,7 +119,7 @@ public class GameManager : MonoBehaviour
 
 						BallHitPlayer.Invoke();
 
-                        //Grynt1 lyd
+                        //ball hit lyd
                         audioManager.PlaySFX(audioManager.Hit);
                     }
 					// Floor hit
